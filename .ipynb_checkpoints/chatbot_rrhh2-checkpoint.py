@@ -121,9 +121,11 @@ def get_llm_response(system_prompt, user_prompt, model_name, api_url):
 st.markdown(f"<h1 style='text-align:center; color: #263238;'>💼 Chatbot RRHH ({DISPLAY_MODEL_NAME})</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align:center; color: #546e7a;'>Consulte información del manual del empleado usando IA local.</p>", unsafe_allow_html=True)
 pdf_file_path = r"C:\Users\myazi\ChatBot\Prueba4.pdf"
+pdf_file_path2 = r"C:\Users\myazi\ChatBot\Código del Trabajo-Chile.pdf"
 
 # --- Load PDF Data ---
 loaded_chunks = load_pdf_and_chunks(pdf_file_path)
+loaded_chunks = load_pdf_and_chunks(pdf_file_path2)
 
 # --- Initialize Chat State ---
 if "chat" not in st.session_state:
@@ -214,4 +216,4 @@ st.chat_input(
 )
 
 # --- Footer ---
-st.caption(f"Asistente RRHH v1.9.2 | Potenciado por: {DISPLAY_MODEL_NAME} | Documento: {os.path.basename(pdf_file_path)}")
+st.caption(f"Asistente RRHH v1.9.2 | Potenciado por: {DISPLAY_MODEL_NAME} | Documento: {os.path.basename(pdf_file_path);{os.path.basename(pdf_file_path;)}")
