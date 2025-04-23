@@ -2,3 +2,4 @@ streamlit
 PyPDF2
 scikit-learn
 requests
+google-cloud-aiplatform
