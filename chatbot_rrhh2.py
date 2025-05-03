@@ -12,9 +12,29 @@ import traceback
 # --- Streamlit config: ¡Debe ser lo primero! ---
 st.set_page_config(page_title="Chatbot RRHH IA", page_icon="💼", layout="wide")
 
+# --- Título Moderno y Atractivo ---
+st.markdown("""
+<div style="
+    text-align: center;
+    font-size: 2.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #b85c38;
+    margin-top: 0.5em;
+    margin-bottom: 1.2em;
+    padding: 0.6em 0 0.6em 0;
+    background: rgba(247, 178, 103, 0.18);
+    border-radius: 22px;
+    box-shadow: 0 2px 12px rgba(184,92,56,0.07);
+    backdrop-filter: blur(2px);
+">
+    💼 Chatbot RRHH IA
+</div>
+""", unsafe_allow_html=True)
+
 # --- LLM Backend Configuration ---
 LLM_API_URL = "http://127.0.0.1:1234/v1/chat/completions"
-LLM_MODEL_NAME = "gemma-3-4b-it-qat" # ¡VERIFICA ESTO!
+LLM_MODEL_NAME = "gemma-3-1b-it-qat" # ¡VERIFICA ESTO! 
 
 # --- Crear Nombre Corto para Mostrar ---
 try:
@@ -23,163 +43,170 @@ try:
     if not DISPLAY_MODEL_NAME: DISPLAY_MODEL_NAME = "LLM Local"
 except Exception: DISPLAY_MODEL_NAME = "LLM Local"
 
-# --- CSS Modernizado y Mejorado ---
-st.markdown(f"""
+# --- CSS Modernizado y Glassmorphism ---
+st.markdown("""
 <style>
-    body, .main {{
-        background: linear-gradient(135deg, #e3fdfd 0%, #cbf1f5 50%, #a6e3e9 100%) !important;
-        font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
-    }}
-    .block-container {{
-        max-width: 900px;
-        margin: 0 auto;
-        background: #e3fdfdcc;
-        border-radius: 22px;
-        box-shadow: 0 8px 32px 0 rgba(166, 227, 233, 0.13);
-        padding: 2rem 2.5rem 2rem 2.5rem;
-    }}
-    .stChatMessage {{ width: 100%; }}
-    .chat-msg-user {{
-        background: linear-gradient(135deg, #b6fcd5 0%, #b5fff9 100%);
-        color: #225c4b;
-        border-radius: 18px 18px 5px 18px;
-        padding: 16px 22px;
-        margin: 12px 0 12px auto;
-        max-width: 70%;
+    /* Fondo principal */
+    section.main {
+        background: linear-gradient(120deg, #f9dbbd 0%, #ffe5d9 80%, #e7c6a9 100%) !important;
+    }
+    /* Contenedor principal de la app */
+    .block-container {
+        background: rgba(255, 247, 240, 0.55) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 8px 32px 0 rgba(184, 92, 56, 0.10) !important;
+        padding: 2.5rem !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1.5px solid rgba(231, 198, 169, 0.18) !important;
+    }
+    /* Botón principal */
+    .stButton > button {
+        background: linear-gradient(90deg, #f7b267 0%, #e7c6a9 100%) !important;
+        color: #b85c38 !important;
+        border-radius: 18px !important;
+        font-size: 1.13rem !important;
+        font-weight: 600 !important;
+        padding: 12px 38px !important;
+        margin-top: 10px !important;
+        box-shadow: 0 4px 18px rgba(184,92,56,0.09) !important;
+        letter-spacing: 0.02em !important;
+        border: none !important;
+    }
+    .stButton > button:hover {
+        background: linear-gradient(90deg, #e7c6a9 0%, #f7b267 100%) !important;
+        color: #6b3e26 !important;
+        transform: translateY(-2px) scale(1.04) !important;
+    }
+    /* Input de texto */
+    .stTextInput input {
+        border-radius: 16px !important;
+        border: 1.5px solid #e7c6a9 !important;
+        padding: 14px 20px !important;
+        font-size: 1.13rem !important;
+        background: rgba(255, 247, 240, 0.85) !important;
+        outline: none !important;
+        transition: border 0.2s !important;
+    }
+    .stTextInput input:focus {
+        border: 1.5px solid #f4845f !important;
+        background: #fff7f0 !important;
+    }
+    /* Chat burbujas */
+    .chat-msg-user {
+        background: rgba(247, 178, 103, 0.75);
+        color: #6b3e26;
+        border-radius: 12px 12px 4px 12px;
+        padding: 18px 28px;
+        margin: 14px 0 14px auto;
+        max-width: 65%;
         float: right;
         clear: both;
         text-align: left;
-        font-size: 1.08rem;
-        box-shadow: 0px 4px 18px rgba(166, 227, 233, 0.10);
-        border: 1px solid #b5fff9;
+        font-size: 1.15rem;
+        font-weight: 500;
+        box-shadow: 0 6px 22px 0 rgba(184, 92, 56, 0.08);
+        border: 1.5px solid rgba(249, 219, 189, 0.45);
         word-break: break-word;
         transition: box-shadow 0.2s;
-    }}
-    .chat-msg-bot {{
-        background: linear-gradient(135deg, #e0f7fa 0%, #caf7e3 100%);
-        color: #225c4b;
-        border-radius: 18px 18px 18px 5px;
-        padding: 16px 22px;
-        margin: 12px auto 12px 0;
-        max-width: 70%;
+        backdrop-filter: blur(2px);
+    }
+    .chat-msg-bot {
+        background: rgba(255, 229, 217, 0.75);
+        color: #7d4f2a;
+        border-radius: 12px 12px 12px 4px;
+        padding: 18px 28px;
+        margin: 14px auto 14px 0;
+        max-width: 65%;
         float: left;
         clear: both;
         text-align: left;
-        font-size: 1.08rem;
-        box-shadow: 0px 4px 18px rgba(166, 227, 233, 0.08);
-        border: 1px solid #caf7e3;
+        font-size: 1.15rem;
+        font-weight: 500;
+        box-shadow: 0 6px 22px 0 rgba(231, 198, 169, 0.10);
+        border: 1.5px solid rgba(249, 219, 189, 0.35);
         word-break: break-word;
         transition: box-shadow 0.2s;
-    }}
-    .chat-ref {{
-        color: #3bb273;
-        font-size: 0.89em;
+        backdrop-filter: blur(2px);
+    }
+    .chat-ref {
+        color: #b85c38;
+        font-size: 0.93em;
         margin-top: 10px;
         padding-left: 5px;
         display: block;
         text-align: left;
         clear: both;
         font-style: italic;
-    }}
-    .stChatMessage > div {{ overflow: auto; }}
-    .chat-header-sticky {{
-        position: sticky;
-        top: 0;
-        z-index: 99;
-        background: linear-gradient(90deg, #b5fff9 0%, #a6e3e9 100%);
-        color: #225c4b;
-        padding: 1.2rem 1rem 1.2rem 1rem;
-        border-radius: 0 0 16px 16px;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 2px 8px rgba(166,227,233,0.09);
-        text-align: center;
-        font-size: 2.1rem;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-    }}
-    .chat-input-bar input {{
-        border-radius: 20px;
-        border: 1.5px solid #caf7e3;
-        padding: 12px 18px;
-        font-size: 1.08rem;
-        background: #e3fdfd;
-        outline: none;
-        transition: border 0.2s;
-    }}
-    .chat-input-bar input:focus {{
-        border: 1.5px solid #a6e3e9;
-        background: #b6fcd5;
-    }}
-    .stButton > button {{
-        background: linear-gradient(90deg, #b5fff9 0%, #b6fcd5 100%);
-        color: #225c4b;
-        border: 0;
-        border-radius: 20px;
-        font-size: 1.08rem;
-        font-weight: 600;
-        padding: 10px 32px;
-        margin-top: 8px;
-        box-shadow: 0 2px 8px rgba(166,227,233,0.08);
-        transition: background 0.2s, color 0.2s;
-    }}
-    .stButton > button:hover {{
-        background: linear-gradient(90deg, #b6fcd5 0%, #b5fff9 100%);
-        color: #176d5a;
-    }}
-    /* Scrollbar bonito */
-    ::-webkit-scrollbar {{ width: 10px; background: #caf7e3; border-radius: 8px; }}
-    ::-webkit-scrollbar-thumb {{ background: #b6fcd5; border-radius: 8px; }}
+        opacity: 0.85;
+    }
+    /* Scrollbar personalizado */
+    ::-webkit-scrollbar { width: 10px; background: #ffe5d9; border-radius: 8px; }
+    ::-webkit-scrollbar-thumb { background: #f7b267; border-radius: 8px; }
 </style>
 """, unsafe_allow_html=True)
 
 # --- Global Variable for PDF Chunks ---
-PDF_CHUNKS_GLOBAL = []
+VECTORIZE_GLOBAL = None
+CORPUS_VECS_GLOBAL = None
+CHUNKS_GLOBAL = None
 
 # --- Functions PDF / Context Retrieval / LLM ---
 
-# @st.cache_data
-def load_pdf_and_chunks(pdf_path):
-    global PDF_CHUNKS_GLOBAL
-    PDF_CHUNKS_GLOBAL = []
-    if not os.path.exists(pdf_path): st.error(f"Error Crítico: PDF no encontrado: '{os.path.abspath(pdf_path)}'"); return None
-    # --- !!! CORRECCIÓN SyntaxError AQUÍ !!! ---
-    chunks = [] # Inicialización en su línea
-    try:        # try: en la siguiente línea
-    # -----------------------------------------
-        print(f"Leyendo PDF: {pdf_path}")
-        with open(pdf_path, "rb") as f:
-            reader = PyPDF2.PdfReader(f)
-            num_pages = len(reader.pages)
-            print(f"{num_pages} páginas.")
-            if num_pages == 0: st.warning("PDF sin páginas.")
-            for i, page in enumerate(reader.pages):
-                try:
-                    pg_text = page.extract_text() or ""
-                    if not pg_text.strip(): continue
-                    paragraphs = re.split(r'\n\s*\n+', pg_text)
-                    for par_num, par in enumerate(paragraphs):
-                         texto_limpio_par = re.sub(r'\s+', ' ', par).strip()
-                         if len(texto_limpio_par) > 40: chunks.append({'pagina': i + 1, 'texto': texto_limpio_par})
-                except Exception as page_e:
-                    print(f"Error pág {i+1}: {page_e}")
-                    st.warning(f"Error procesando pág {i+1}.")
-        print(f"{len(chunks)} chunks encontrados.")
-        if not chunks: st.warning("Advertencia: No se extrajeron chunks válidos.")
-        PDF_CHUNKS_GLOBAL = chunks
+# --- Cargar rutas de documentos ---
+pdf_file_path = r"C:\Users\myazi\ChatBot\Prueba4.pdf"  # Manual del empleado
+codigo_trabajo_path = r"C:\Users\myazi\ChatBot\Código del Trabajo-Chile.pdf"  # Código del Trabajo-Chile
+
+# --- Cargar ambos documentos y combinar chunks pequeños (~200 caracteres) ---
+@st.cache_data(show_spinner="Cargando y procesando documentos PDF...")
+def load_pdf_and_chunks_small(path):
+    try:
+        import PyPDF2
+        import re
+        reader = PyPDF2.PdfReader(path)
+        chunks = []
+        for i, page in enumerate(reader.pages):
+            pg_text = page.extract_text() or ""
+            if not pg_text.strip(): continue
+            # Divide en bloques pequeños
+            pg_text = re.sub(r'\s+', ' ', pg_text)
+            for start in range(0, len(pg_text), 200):
+                chunk = pg_text[start:start+200].strip()
+                if len(chunk) > 40:
+                    chunks.append({'pagina': i + 1, 'texto': chunk})
         return chunks
     except Exception as e:
         st.error(f"Error Crítico PDF: {e}")
         print(traceback.format_exc())
         return None
 
-def find_relevant_context(pregunta, chunks, top_n=3):
-    # (Sin cambios en esta función)
-    if not chunks or not pregunta or not pregunta.strip(): return None, []
+@st.cache_data(show_spinner="Calculando embeddings de contexto...")
+def precalc_tfidf(chunks):
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+    if not chunks:
+        return None, None, None
+    corpus = [c['texto'] for c in chunks]
+    vectorizer = TfidfVectorizer()
+    corpus_vecs = vectorizer.fit_transform(corpus)
+    return corpus, vectorizer, corpus_vecs
+
+# --- Cargar y cachear todo al inicio ---
+manual_chunks = load_pdf_and_chunks_small(pdf_file_path) or []
+codigo_trabajo_chunks = load_pdf_and_chunks_small(codigo_trabajo_path) or []
+todos_los_chunks = manual_chunks + codigo_trabajo_chunks
+CORPUS, VECTORIZE_GLOBAL, CORPUS_VECS_GLOBAL = precalc_tfidf(todos_los_chunks)
+CHUNKS_GLOBAL = todos_los_chunks
+
+# --- Función rápida de contexto ---
+def find_relevant_context(pregunta, chunks=None, top_n=1):
+    if chunks is None:
+        chunks = CHUNKS_GLOBAL
+    if not chunks or not pregunta or not pregunta.strip() or VECTORIZE_GLOBAL is None or CORPUS_VECS_GLOBAL is None:
+        return None, []
     try:
-        corpus = [c['texto'] for c in chunks];
-        if not corpus: return None, []
-        vectorizer = TfidfVectorizer(); corpus_vecs = vectorizer.fit_transform(corpus)
-        pregunta_vec = vectorizer.transform([pregunta]); similitudes = cosine_similarity(pregunta_vec, corpus_vecs)[0]
+        pregunta_vec = VECTORIZE_GLOBAL.transform([pregunta])
+        from sklearn.metrics.pairwise import cosine_similarity
+        similitudes = cosine_similarity(pregunta_vec, CORPUS_VECS_GLOBAL)[0]
         relevant_indices = [i for i, score in sorted(enumerate(similitudes), key=lambda item: item[1], reverse=True) if score > 0.01]
         if not relevant_indices: return None, []
         top_indices = relevant_indices[:min(top_n, len(relevant_indices))]
@@ -187,22 +214,83 @@ def find_relevant_context(pregunta, chunks, top_n=3):
         for idx in top_indices:
             chunk_data = chunks[idx]; contexto_combinado += f"---\nPág ~ {chunk_data['pagina']}:\n{chunk_data['texto']}\n\n"; paginas_fuente.add(chunk_data['pagina'])
         return contexto_combinado.strip(), sorted(list(paginas_fuente))
-    except Exception as e: st.error(f"Error búsqueda TF-IDF: {e}"); print(traceback.format_exc()); return None, []
+    except Exception as e:
+        st.error(f"Error búsqueda TF-IDF: {e}")
+        print(traceback.format_exc())
+        return None, []
 
+# --- Feedback inmediato al usuario ---
+def process_user_input():
+    import re, traceback
+    user_question = st.session_state.get('chat_input_key', '')
+    if not user_question.strip(): return
+    user_question_clean = user_question.strip()
+    st.session_state.chat.append({'role': 'user', 'msg': user_question_clean, 'ref': None})
+    status = st.status(label="Procesando...", expanded=True)
+
+    # --- ASEGURAR PROMPTS DEFINIDOS ---
+    prompt_con_contexto = """Contexto de los documentos:\n{contexto}\n\n---\nPregunta del Usuario: {pregunta}\n---\nInstrucciones: Responde de manera ejecutiva, precisa y acertiva. Explica brevemente el fundamento legal citado y su aplicación práctica. No repitas solo el texto legal: interpreta y resume para que el usuario entienda claramente la respuesta. Si corresponde, cita documento y páginas. Si no está en contexto, indícalo."""
+    prompt_sin_contexto = """Pregunta del Usuario: {pregunta}\n---\nInstrucciones: No hay contexto de los documentos. Responde de manera ejecutiva, precisa y acertiva. Explica brevemente el fundamento legal citado y su aplicación práctica. No repitas solo el texto legal: interpreta y resume para que el usuario entienda claramente la respuesta. Si no estás seguro, indícalo. No inventes."""
+    system_prompt = f"Eres un asistente experto de RRHH para la Asociación Pro Desarrollo Comunal del Patio, Inc. Cultura FORMAL E INNOVADORA. Responde basándote *estrictamente* en el contexto de los documentos (Manual: {os.path.basename(pdf_file_path)}, Código: {os.path.basename(codigo_trabajo_path)}) si se proporciona."
+
+    try:
+        with st.spinner("Pensando y buscando contexto..."):
+            contexto, paginas_fuente = find_relevant_context(user_question_clean, top_n=2)
+        if contexto:
+            ref_info_for_state = paginas_fuente
+            label_text = f"Consultando a {DISPLAY_MODEL_NAME}..."
+            if isinstance(paginas_fuente, list):
+                try:
+                    pages_str = ", ".join(map(str, paginas_fuente))
+                    label_text = f"Contexto (Págs: {pages_str}). Consultando..."
+                except Exception:
+                    pass
+            status.update(label=label_text)
+            if len(contexto) > 1800:
+                contexto = contexto[:1800]  # Limita el contexto por si acaso
+                st.info("El contexto fue recortado para evitar superar el límite del modelo. Si necesitas más detalle, haz una pregunta más específica.")
+        else:
+            print("Advertencia: No se encontró contexto relevante.")
+            user_prompt_final = prompt_sin_contexto.format(pregunta=user_question_clean)
+            ref_info_for_state = ["Contexto no encontrado"]
+            status.update(label=f"Consultando a {DISPLAY_MODEL_NAME}...")
+        # --- Llama al LLM ---
+        with st.spinner("Consultando modelo IA..."):
+            llm_response = get_llm_response(system_prompt, user_prompt_final if not contexto else prompt_con_contexto.format(contexto=contexto, pregunta=user_question_clean), LLM_MODEL_NAME, LLM_API_URL)
+        # --- FILTRAR SOLO RESPUESTA ---
+        import re
+        matches = list(re.finditer(r"(?:Respuesta(?: final)?\s*:?|Respuesta directa\s*:?)\s*(.+)", llm_response, re.IGNORECASE|re.DOTALL))
+        if matches:
+            respuesta_final = matches[-1].group(1).strip()
+        else:
+            razonamiento_regex = r"(?:Pensamiento|Razonamiento|Explicaci[oó]n|Motivaci[oó]n|Justificaci[oó]n|An[aá]lisis)\s*:?(.+?)(?:\n|$)"
+            respuesta = llm_response
+            respuesta = re.sub(razonamiento_regex, '', respuesta, flags=re.IGNORECASE|re.DOTALL)
+            respuesta_final = respuesta.strip()  # Mostrar respuesta completa, no solo la primera línea
+            if not respuesta_final or respuesta_final.lower() in ["rrhhbot", "bot", "respuesta", "", "."] or len(respuesta_final) < 5:
+                respuesta_final = llm_response.strip()
+        st.session_state.chat.append({'role': 'bot', 'msg': respuesta_final, 'ref': ref_info_for_state})
+        status.update(label="Respuesta lista.", state="complete", expanded=False)
+    except Exception as e:
+        print(f"Error en process_user_input: {e}"); print(traceback.format_exc())
+        st.error(f"Ocurrió un error al procesar tu pregunta: {e}")
+        error_message = f"Error al procesar: {type(e).__name__}."
+        st.session_state.chat.append({'role': 'bot', 'msg': error_message, 'ref': 'Error Proceso'})
+        status.update(label="Error", state="error", expanded=True)
+
+# --- get_llm_response ---
 def get_llm_response(system_prompt, user_prompt, model_name, api_url):
-    # (Sin cambios en esta función)
     headers = {'Content-Type': 'application/json'}
-    payload = { "model": model_name, "messages": [{"role": "system", "content": system_prompt},{"role": "user", "content": user_prompt}], "temperature": 0.5, "max_tokens": 1000, "stream": False }
+    payload = { "model": model_name, "messages": [{"role": "system", "content": system_prompt},{"role": "user", "content": user_prompt}], "temperature": 0.5, "max_tokens": 4096, "stream": False }
     print(f"DEBUG: Conectando a: {api_url}, Modelo API: {model_name}")
     try:
-        response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=180)
+        response = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=120)
         print(f"LLM Status: {response.status_code}")
         if response.status_code == 404: st.error(f"Error 404: Endpoint no encontrado: {api_url}"); return f"Error: Endpoint {api_url} no encontrado."
         if response.status_code == 400: st.error(f"Error 400: Petición incorrecta. ¿Modelo '{model_name}' válido? Detalle: {response.text}"); return f"Error: Petición incorrecta (¿modelo?)."
         response.raise_for_status()
         try:
             response_data = response.json(); print("Respuesta LLM recibida.")
-            # print(f"Datos crudos: {response_data}")
             if 'choices' in response_data and isinstance(response_data['choices'], list) and response_data['choices']:
                 if 'message' in response_data['choices'][0] and 'content' in response_data['choices'][0]['message']:
                      print("DEBUG: Extracción OpenAI exitosa."); return response_data['choices'][0]['message']['content'].strip()
@@ -218,22 +306,6 @@ def get_llm_response(system_prompt, user_prompt, model_name, api_url):
 st.markdown(f"<div class='chat-header-sticky'>💼 Chatbot RRHH ({DISPLAY_MODEL_NAME})</div>", unsafe_allow_html=True)
 st.markdown("<p style='text-align:center; color: #546e7a; font-size:1.12rem;'>Consulte información del manual del empleado y el Código del Trabajo-Chile usando IA local.</p>", unsafe_allow_html=True)
 
-# --- Cargar rutas de documentos ---
-pdf_file_path = r"C:\Users\myazi\ChatBot\Prueba4.pdf"  # Manual del empleado
-codigo_trabajo_path = r"C:\Users\myazi\ChatBot\Código del Trabajo-Chile.pdf"  # Código del Trabajo-Chile
-
-# --- Cargar ambos documentos y combinar chunks ---
-manual_chunks = load_pdf_and_chunks(pdf_file_path) or []
-codigo_trabajo_chunks = load_pdf_and_chunks(codigo_trabajo_path) or []
-# Añadir un campo 'fuente' a cada chunk para identificar el origen
-def add_source(chunks, fuente):
-    for c in chunks:
-        c['fuente'] = fuente
-add_source(manual_chunks, os.path.basename(pdf_file_path))
-add_source(codigo_trabajo_chunks, os.path.basename(codigo_trabajo_path))
-# Unir todos los chunks
-todos_los_chunks = manual_chunks + codigo_trabajo_chunks
-
 # --- Initialize Chat State ---
 if "chat" not in st.session_state:
     st.session_state["chat"] = []
@@ -242,95 +314,32 @@ if "chat" not in st.session_state:
     else:
         st.session_state["chat"].append({'role': 'bot', 'msg': f'⚠️ **Error Crítico:** No se pudo cargar uno o ambos documentos.', 'ref': 'Error Carga'})
 
-# --- Processing Function (Callback) ---
-def process_user_input():
-    user_question = st.session_state.get("chat_input_key", None)
-    if not todos_los_chunks:
-        st.error("Procesamiento detenido: Documentos no cargados.")
-        return
-    if not user_question or not user_question.strip():
-        return
-
-    user_question_clean = user_question.strip()
-    print(f"\n--- Procesando Consulta ---\nUsuario: {user_question_clean}")
-    st.session_state.chat.append({'role': 'user', 'msg': user_question_clean})
-    status = st.status("Procesando...", expanded=False)
-
-    try:
-        status.update(label="Analizando documentos...")
-        contexto, paginas_fuente = find_relevant_context(user_question_clean, todos_los_chunks, top_n=3)
-
-        # --- Limitar el contexto para evitar error de tokens ---
-        MAX_CONTEXT_CHARS = 120000  # Aproximadamente 32768 tokens
-        contexto_recortado = contexto
-        contexto_truncado = False
-        if contexto and len(contexto) > MAX_CONTEXT_CHARS:
-            contexto_recortado = contexto[:MAX_CONTEXT_CHARS]
-            contexto_truncado = True
-
-        prompt_contexto = "Contexto de los documentos:\n{contexto}\n\n---\nPregunta del Usuario: {pregunta}\n---\nInstrucciones: Cita documento y páginas si es posible. Si no está en contexto, indícalo. Sé profesional y conciso."
-        prompt_sin_contexto = "Pregunta del Usuario: {pregunta}\n---\nInstrucciones: No hay contexto de los documentos. Si no estás seguro, indícalo. No inventes. Sé profesional y conciso."
-        system_prompt = f"Eres un asistente experto de RRHH para la Asociación Pro Desarrollo Comunal del Patio, Inc. Cultura FORMAL E INNOVADORA. Responde basándote *estrictamente* en el contexto de los documentos (Manual: {os.path.basename(pdf_file_path)}, Código: {os.path.basename(codigo_trabajo_path)}) si se proporciona."
-
-        user_prompt_final = ""; ref_info_for_state = []
-        if contexto_recortado:
-            print(f"DEBUG: Contexto encontrado. Páginas: {paginas_fuente}")
-            user_prompt_final = prompt_contexto.format(contexto=contexto_recortado, pregunta=user_question_clean)
-            ref_info_for_state = paginas_fuente
-            label_text = f"Consultando a {DISPLAY_MODEL_NAME}..."
-            if isinstance(paginas_fuente, list):
-                try:
-                    pages_str = ", ".join(map(str, paginas_fuente))
-                    label_text = f"Contexto (Págs: {pages_str}). Consultando..."
-                except Exception:
-                    pass
-            status.update(label=label_text)
-            if contexto_truncado:
-                st.info("El contexto fue recortado para evitar superar el límite del modelo. Si necesitas más detalle, haz una pregunta más específica.")
-        else:
-            print("Advertencia: No se encontró contexto relevante.")
-            user_prompt_final = prompt_sin_contexto.format(pregunta=user_question_clean)
-            ref_info_for_state = ["Contexto no encontrado"]
-            status.update(label=f"Consultando a {DISPLAY_MODEL_NAME}...")
-
-        llm_response = get_llm_response(system_prompt, user_prompt_final, LLM_MODEL_NAME, LLM_API_URL)
-        st.session_state.chat.append({'role': 'bot', 'msg': llm_response, 'ref': ref_info_for_state})
-        status.update(label="Respuesta lista.", state="complete", expanded=False)
-
-    except Exception as e:
-        print(f"Error en process_user_input: {e}"); print(traceback.format_exc())
-        st.error(f"Ocurrió un error al procesar tu pregunta: {e}")
-        error_message = f"Error al procesar: {type(e).__name__}."
-        st.session_state.chat.append({'role': 'bot', 'msg': error_message, 'ref': 'Error Proceso'})
-        status.update(label="Error", state="error", expanded=True)
-
 # --- Display Existing Chat Messages ---
 st.divider()
 chat_placeholder = st.container()
 with chat_placeholder:
     if "chat" in st.session_state:
-        for i, turno in enumerate(st.session_state.chat):
+        for i, turno in enumerate(st.session_state["chat"]):
             try:
                 is_user = turno['role'] == 'user'
-                avatar_icon = "🧑‍💻" if is_user else "💼"
-                with st.chat_message(turno['role'], avatar=avatar_icon):
-                    css_class = "chat-msg-user" if is_user else "chat-msg-bot"
-                    msg_content = turno.get('msg', '*Mensaje no disponible*')
-                    st.markdown(f'<div class="{css_class}">{msg_content}</div>', unsafe_allow_html=True)
-                    if not is_user:
-                        ref_info = turno.get('ref')
-                        if ref_info and ref_info not in ['Inicial', 'Error Carga', 'Error Proceso', ["Contexto no encontrado"], ["N/A"]]:
-                            try:
-                                # Mostrar referencias de ambos documentos
-                                if isinstance(ref_info, list) and ref_info and isinstance(ref_info[0], dict):
-                                    for ref in ref_info:
-                                        st.markdown(f'<div class="chat-ref">Referencia: {ref.get("fuente", "¿?")}, pág. ~ {ref.get("pagina", "¿?")}</div>', unsafe_allow_html=True)
-                                else:
-                                    st.markdown(f'<div class="chat-ref">Referencia: {ref_info}</div>', unsafe_allow_html=True)
-                            except Exception as ref_e:
-                                print(f"Error display ref: {ref_e}"); st.caption(f"Ref: {ref_info} (Error)")
-                        elif ref_info == ["Contexto no encontrado"]:
-                             st.markdown(f'<div class="chat-ref">Nota: No se encontró contexto específico en los documentos.</div>', unsafe_allow_html=True)
+                css_class = "chat-msg-user" if is_user else "chat-msg-bot"
+                avatar = "🧑‍💻" if is_user else "💼"
+                # Renderiza el mensaje con markdown y HTML personalizado
+                st.markdown(f'<div class="{css_class}"><b>{avatar} {"Tú" if is_user else "RRHHBot"}</b><br>{turno.get("msg", "*Mensaje no disponible*")}</div>', unsafe_allow_html=True)
+                # Referencias/contexto para respuestas del bot
+                if not is_user:
+                    ref_info = turno.get('ref')
+                    if ref_info and ref_info not in ['Inicial', 'Error Carga', 'Error Proceso', ["Contexto no encontrado"], ["N/A"]]:
+                        try:
+                            if isinstance(ref_info, list) and ref_info and isinstance(ref_info[0], dict):
+                                for ref in ref_info:
+                                    st.markdown(f'<div class="chat-ref">Referencia: {ref.get("fuente", "¿?")}, pág. ~ {ref.get("pagina", "¿?")}</div>', unsafe_allow_html=True)
+                            else:
+                                st.markdown(f'<div class="chat-ref">Referencia: {ref_info}</div>', unsafe_allow_html=True)
+                        except Exception as ref_e:
+                            print(f"Error display ref: {ref_e}"); st.caption(f"Ref: {ref_info} (Error)")
+                    elif ref_info == ["Contexto no encontrado"]:
+                        st.markdown(f'<div class="chat-ref">Nota: No se encontró contexto específico en los documentos.</div>', unsafe_allow_html=True)
             except Exception as display_e:
                 print(f"Error display msg {i}: {display_e}"); st.error(f"Error al mostrar mensaje {i}."); print(traceback.format_exc())
 
