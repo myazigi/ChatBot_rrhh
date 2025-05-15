@@ -35,7 +35,7 @@ st.markdown("""
 
 # --- LLM Backend Configuration ---
 # Intenta obtener de variables de entorno, si no, usa valores por defecto
-LLM_API_URL = os.environ.get("LLM_API_URL", "http://100.101.84.15:1234/v1/chat/completions")
+LLM_API_URL = os.environ.get("LLM_API_URL", "http://localhost:1234/v1/chat/completions")
 LLM_MODEL_NAME = os.environ.get("LLM_MODEL_NAME", "gemma-3-1b-it-qat") # ¡VERIFICA ESTO! Puede necesitar / en vez de -
 
 # --- Crear Nombre Corto para Mostrar ---
