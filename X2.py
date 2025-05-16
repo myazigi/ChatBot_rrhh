@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# app.py
 import os
 import re
 import json
@@ -7,12 +7,10 @@ import requests
 import PyPDF2
 from datetime import datetime
 from typing import List, Dict, Any, Tuple, Optional
-import streamlit as st
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from flask import Flask, render_template, request, jsonify, session
 
-# --- Configuración de la página ---
-st.set_page_config(page_title="Aura RRHH (WhatsApp)", page_icon="", layout="centered")
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
 
 # --- Variables de backend LLM ---
 LLM_API_URL = os.environ.get("LLM_API_URL", "http://localhost:1234/v1/chat/completions")
@@ -24,7 +22,7 @@ except Exception:
     DISPLAY_MODEL_NAME = LLM_MODEL_NAME
 
 # --- Rutas de los PDFs ---
-script_dir = os.path.dirname(os.path.abspath(__file__)) if "__file__" in locals() else "."
+script_dir = os.path.dirname(os.path.abspath(__file__))
 pdf_file_path = os.path.join(script_dir, "Prueba4.pdf")
 codigo_trabajo_path = os.path.join(script_dir, "Código del Trabajo-Chile.pdf")
 
@@ -37,16 +35,14 @@ CORPUS_VECS_GLOBAL = None
 
 # Revisar existencia de los PDFs
 if not os.path.exists(pdf_file_path):
-    st.sidebar.error("Manual no encontrado")
     DOC_LOAD_ERROR = True
+
 if not os.path.exists(codigo_trabajo_path):
-    st.sidebar.error("Código del Trabajo no encontrado")
     DOC_LOAD_ERROR = True
 
 CHUNK_SIZE = 600
 CHUNK_OVERLAP = 75
 
-@st.cache_data(show_spinner="Analizando documentos…")
 def load_and_chunk_pdfs(manual_path: str, codigo_path: str) -> List[Dict[str, Any]]:
     all_chunks = []
     for nombre, path in [("Manual", manual_path), ("CódigoTrabajo", codigo_path)]:
@@ -69,17 +65,17 @@ def load_and_chunk_pdfs(manual_path: str, codigo_path: str) -> List[Dict[str, An
                             "texto": chunk
                         })
         except Exception:
-            st.sidebar.error(f"Error procesando PDF {nombre}")
             print(traceback.format_exc())
     if not all_chunks and not DOC_LOAD_ERROR:
-        st.sidebar.warning("No se extrajeron chunks de texto.")
+        print("No se extrajeron chunks de texto.")
     return all_chunks
 
-@st.cache_data(show_spinner="Creando índice…")
 def precalculate_tfidf_vectors(chunks: List[Dict[str, Any]]):
     if not chunks:
         return None, None, None
     try:
+        from sklearn.feature_extraction.text import TfidfVectorizer
+        from sklearn.metrics.pairwise import cosine_similarity
         corpus = [c["texto"] for c in chunks]
         vectorizer = TfidfVectorizer(
             stop_words="english",
@@ -90,7 +86,6 @@ def precalculate_tfidf_vectors(chunks: List[Dict[str, Any]]):
         corpus_vecs = vectorizer.fit_transform(corpus)
         return corpus, vectorizer, corpus_vecs
     except Exception:
-        st.sidebar.error("Error calculando TF-IDF")
         print(traceback.format_exc())
         return None, None, None
 
@@ -152,9 +147,9 @@ def get_llm_response(system_prompt: str, user_prompt: str) -> str:
 
 def handle_new_message(user_text: str):
     ts = datetime.now().strftime("%H:%M")
-    if "chat" not in st.session_state:
-        st.session_state.chat = []
-    st.session_state.chat.append({
+    if "chat" not in session:
+        session["chat"] = []
+    session["chat"].append({
         "role": "user",
         "content": user_text,
         "timestamp": ts
@@ -176,7 +171,7 @@ def handle_new_message(user_text: str):
         content = f"⚠️ Problema técnico: {llm_resp}"
     else:
         content = llm_resp
-    st.session_state.chat.append({
+    session["chat"].append({
         "role": "assistant",
         "content": content,
         "timestamp": bot_ts
@@ -192,173 +187,27 @@ if not DOC_LOAD_ERROR:
     else:
         DOC_LOAD_ERROR = True
 
-# --- CSS estilo WhatsApp moderno ---
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-    body, html {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(135deg, #ece5dd 0%, #d1f7c4 100%) !important;
-        font-family: 'Roboto', sans-serif;
-    }
-    .wa-header {
-        position: sticky;
-        top: 0;
-        width: 100%;
-        background: var(--header-bg, #075e54);
-        color: var(--header-text, #fff);
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem 1.3rem 1rem 1rem;
-        border-radius: 0 0 18px 18px;
-        z-index: 100;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        margin-bottom: 1rem;
-    }
-    .wa-avatar {
-        width: 44px; height: 44px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .wa-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        letter-spacing: .5px;
-    }
-    .chat-container {
-        background: rgba(255,255,255,0.85);
-        padding: 1.2rem 0.7rem 5.5rem 0.7rem;
-        border-radius: 18px;
-        min-height: 500px;
-        max-width: 540px;
-        margin: 0 auto 0 auto;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-        display: flex;
-        flex-direction: column;
-        gap: 0.2rem;
-    }
-    .msg-user {
-        background: var(--user-bg, #dcf8c6);
-        color: var(--text, #303030);
-        padding: .7rem 1.1rem;
-        border-radius: 10px 10px 0 18px;
-        margin-bottom: 4px;
-        align-self: flex-end;
-        max-width: 80%;
-        font-size: 1.04rem;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-        word-break: break-word;
-    }
-    .msg-bot {
-        background: var(--bot-bg, #fff);
-        color: var(--text, #303030);
-        padding: .7rem 1.1rem;
-        border-radius: 10px 10px 18px 0;
-        margin-bottom: 4px;
-        align-self: flex-start;
-        max-width: 80%;
-        border: 1px solid #e0e0e0;
-        font-size: 1.04rem;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-        word-break: break-word;
-    }
-    .msg-meta {
-        font-size: .75em;
-        color: var(--meta, #8b9194);
-        margin-top: 0;
-        margin-bottom: 2px;
-        padding-left: 2px;
-    }
-    .wa-input-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100vw;
-        background: #f7f7f7;
-        box-shadow: 0 -1px 8px rgba(0,0,0,0.04);
-        padding: 1rem 0;
-        z-index: 101;
-        display: flex;
-        justify-content: center;
-    }
-    .wa-input-inner {
-        display: flex;
-        gap: 0.5rem;
-        width: 100%;
-        max-width: 520px;
-    }
-    .wa-input-box {
-        flex: 1 1 auto;
-        border: 1.5px solid #d1d7db;
-        border-radius: 12px;
-        padding: .7rem 1rem;
-        font-size: 1.08rem;
-        outline: none;
-        background: #fff;
-        transition: border 0.2s;
-    }
-    .wa-input-box:focus {
-        border: 1.5px solid #25d366;
-    }
-    .wa-send-btn {
-        background: #25d366;
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        padding: .7rem 1.3rem;
-        font-size: 1.09rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: background 0.2s;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-    }
-    .wa-send-btn:hover {
-        background: #128c7e;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+@app.route('/')
+def index():
+    if DOC_LOAD_ERROR:
+        return render_template('index.html', chat=[], error="No se pudieron cargar los documentos PDF requeridos. Por favor verifica los archivos.")
+    if "chat" not in session:
+        session["chat"] = [
+            {
+                "role": "assistant",
+                "content": "¡Hola! Soy Aura ✨. ¿Consultas sobre el Manual o Código del Trabajo?",
+                "timestamp": datetime.now().strftime("%H:%M")
+            }
+        ]
+    return render_template('index.html', chat=session["chat"], error=None)
 
-# --- Interfaz de usuario del chat moderno ---
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    user_text = request.form['message']
+    handle_new_message(user_text)
+    return jsonify(session["chat"])
 
-# Inicializa la sesión de chat si no existe
-if "chat" not in st.session_state:
-    st.session_state.chat = []
+if __name__ == '__main__':
+    app.run(debug=True)
 
-
-# No mostrar ningún título ni caja de texto fuera del chat
-
-if DOC_LOAD_ERROR:
-    st.error("No se pudieron cargar los documentos PDF requeridos. Por favor verifica los archivos.")
-else:
-        # Título moderno del chatbot
-    st.markdown('''
-        <div style="display:flex;align-items:center;gap:12px;padding:12px 0 18px 0;">
-            <div style="font-size:2rem; background:linear-gradient(135deg,#25d366,#128c7e); border-radius:50%; width:48px; height:48px; display:flex; align-items:center; justify-content:center; color:white;">🤖</div>
-            <div style="font-size:1.7rem; font-weight:700; color:#128c7e; letter-spacing:1px;">Aura RRHH</div>
-        </div>
-        <hr style="margin-bottom:14px; border: none; border-top: 2px solid #e0e0e0;" />
-    ''', unsafe_allow_html=True)
-
-    # Mostrar mensajes en orden natural (más antiguo arriba, nuevo abajo)
-    if st.session_state.chat:
-        for msg in st.session_state.chat:
-            if msg["role"] == "user":
-                st.markdown(f'<div class="msg-meta">Tú | {msg["timestamp"]}</div>', unsafe_allow_html=True)
-                st.markdown(f'<div class="msg-user">{msg["content"]}</div>', unsafe_allow_html=True)
-            else:
-                st.markdown(f'<div class="msg-meta">Aura | {msg["timestamp"]}</div>', unsafe_allow_html=True)
-                st.markdown(f'<div class="msg-bot">{msg["content"]}</div>', unsafe_allow_html=True)
-    else:
-        # Mostrar mensaje de bienvenida si el chat está vacío
-        st.markdown(f'<div class="msg-meta">Aura | ahora</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="msg-bot">¡Hola! 👋 Soy Aura, tu asistente RRHH. ¿En qué puedo ayudarte hoy?</div>', unsafe_allow_html=True)
-
-    # Entrada de texto y botón para enviar
-    with st.form("chat_form", clear_on_submit=True):
-        user_input = st.text_input("Mensaje", "", key="input_text", placeholder="Escribe tu mensaje...", label_visibility="collapsed")
-        submit = st.form_submit_button("Enviar")
-    if submit and user_input.strip():
-        handle_new_message(user_input.strip())
-        st.rerun()
+#Código de `templates
