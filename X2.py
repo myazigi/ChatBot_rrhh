@@ -8,6 +8,8 @@ import PyPDF2
 from datetime import datetime
 from typing import List, Dict, Any, Tuple, Optional
 from flask import Flask, render_template, request, jsonify, session
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -26,16 +28,28 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 pdf_file_path = os.path.join(script_dir, "Prueba4.pdf")
 codigo_trabajo_path = os.path.join(script_dir, "Código del Trabajo-Chile.pdf")
 
-# --- Flags y caches ---
+# Verificación clara de existencia de los PDFs
 DOC_LOAD_ERROR = False
+missing_files = []
+if not os.path.exists(pdf_file_path):
+    missing_files.append("Prueba4.pdf")
+    DOC_LOAD_ERROR = True
+if not os.path.exists(codigo_trabajo_path):
+    missing_files.append("Código del Trabajo-Chile.pdf")
+    DOC_LOAD_ERROR = True
+if DOC_LOAD_ERROR:
+    print("No se encontraron los siguientes archivos PDF requeridos:")
+    for f in missing_files:
+        print(" -", f)
+else:
+    print("Todos los archivos PDF requeridos están presentes.")
+
+# --- Flags y caches ---
 CHUNKS_GLOBAL = None
 CORPUS_GLOBAL = None
 VECTORIZER_GLOBAL = None
 CORPUS_VECS_GLOBAL = None
 
-# Revisar existencia de los PDFs
-if not os.path.exists(pdf_file_path):
-    DOC_LOAD_ERROR = True
 
 if not os.path.exists(codigo_trabajo_path):
     DOC_LOAD_ERROR = True
@@ -74,8 +88,6 @@ def precalculate_tfidf_vectors(chunks: List[Dict[str, Any]]):
     if not chunks:
         return None, None, None
     try:
-        from sklearn.feature_extraction.text import TfidfVectorizer
-        from sklearn.metrics.pairwise import cosine_similarity
         corpus = [c["texto"] for c in chunks]
         vectorizer = TfidfVectorizer(
             stop_words="english",
@@ -90,7 +102,8 @@ def precalculate_tfidf_vectors(chunks: List[Dict[str, Any]]):
         return None, None, None
 
 def find_relevant_context(pregunta: str, top_n: int = 1) -> Tuple[Optional[str], List[Dict[str, Any]]]:
-    if DOC_LOAD_ERROR or not CHUNKS_GLOBAL or not pregunta.strip():
+    if DOC_LOAD_ERROR or not CHUNKS_GLOBAL or not pregunta or not pregunta.strip() or VECTORIZER_GLOBAL is None or CORPUS_VECS_GLOBAL is None:
+        print("Contexto no buscado: Faltan datos o hubo error previo.")
         return None, []
     try:
         q_vec = VECTORIZER_GLOBAL.transform([pregunta])
@@ -108,8 +121,10 @@ def find_relevant_context(pregunta: str, top_n: int = 1) -> Tuple[Optional[str],
                 ctx += f"Fuente: {chunk['fuente']}, Pág. ~{chunk['pagina']}\n"
                 ctx += f'"{chunk["texto"]}"\n\n'
                 seen.add(chunk["texto"])
+        print(f"Contexto encontrado ({len(top_idxs)} chunks) para: '{pregunta[:50]}...'")
         return ctx.strip(), []
-    except Exception:
+    except Exception as e:
+        print(f"Error durante la búsqueda de contexto TF-IDF: {e}")
         print(traceback.format_exc())
         return None, []
 
@@ -190,7 +205,8 @@ if not DOC_LOAD_ERROR:
 @app.route('/')
 def index():
     if DOC_LOAD_ERROR:
-        return render_template('index.html', chat=[], error="No se pudieron cargar los documentos PDF requeridos. Por favor verifica los archivos.")
+        missing = '<br>'.join(missing_files) if missing_files else 'Desconocido'
+        return render_template('index.html', chat=[], error=f"No se encontraron los siguientes archivos PDF requeridos:<br>{missing}")
     if "chat" not in session:
         session["chat"] = [
             {
@@ -205,6 +221,7 @@ def index():
 def send_message():
     user_text = request.form['message']
     handle_new_message(user_text)
+    session.modified = True  # Fuerza a Flask a guardar la sesión
     return jsonify(session["chat"])
 
 if __name__ == '__main__':
