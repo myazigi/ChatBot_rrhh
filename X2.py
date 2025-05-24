@@ -5,6 +5,7 @@ import json
 import traceback
 import requests
 import PyPDF2
+import pickle
 from datetime import datetime
 from typing import List, Dict, Any, Tuple, Optional
 from flask import Flask, render_template, request, jsonify, session
@@ -23,10 +24,16 @@ try:
 except Exception:
     DISPLAY_MODEL_NAME = LLM_MODEL_NAME
 
-# --- Rutas de los PDFs ---
+# --- Rutas de los PDFs y caché ---
 script_dir = os.path.dirname(os.path.abspath(__file__))
 pdf_file_path = os.path.join(script_dir, "Prueba4.pdf")
 codigo_trabajo_path = os.path.join(script_dir, "Código del Trabajo-Chile.pdf")
+
+# --- Rutas de caché ---
+CACHE_DIR = os.path.join(script_dir, "cache")
+os.makedirs(CACHE_DIR, exist_ok=True)
+CHUNKS_CACHE = os.path.join(CACHE_DIR, "chunks.pkl")
+TFIDF_CACHE = os.path.join(CACHE_DIR, "tfidf.pkl")
 
 # Verificación clara de existencia de los PDFs
 DOC_LOAD_ERROR = False
@@ -192,15 +199,37 @@ def handle_new_message(user_text: str):
         "timestamp": bot_ts
     })
 
-# --- Carga de PDFs e índices ---
-if not DOC_LOAD_ERROR:
-    CHUNKS_GLOBAL = load_and_chunk_pdfs(pdf_file_path, codigo_trabajo_path)
-    if CHUNKS_GLOBAL:
-        CORPUS_GLOBAL, VECTORIZER_GLOBAL, CORPUS_VECS_GLOBAL = precalculate_tfidf_vectors(CHUNKS_GLOBAL)
-        if CORPUS_VECS_GLOBAL is None:
-            DOC_LOAD_ERROR = True
-    else:
+def save_cache(obj, path):
+    with open(path, "wb") as f:
+        pickle.dump(obj, f)
+
+def load_cache(path):
+    with open(path, "rb") as f:
+        return pickle.load(f)
+
+def load_all_with_cache():
+    global CHUNKS_GLOBAL, CORPUS_GLOBAL, VECTORIZER_GLOBAL, CORPUS_VECS_GLOBAL, DOC_LOAD_ERROR
+    try:
+        if os.path.exists(CHUNKS_CACHE) and os.path.exists(TFIDF_CACHE):
+            CHUNKS_GLOBAL = load_cache(CHUNKS_CACHE)
+            CORPUS_GLOBAL, VECTORIZER_GLOBAL, CORPUS_VECS_GLOBAL = load_cache(TFIDF_CACHE)
+            print("Cache de PDFs y TF-IDF cargado.")
+        else:
+            CHUNKS_GLOBAL = load_and_chunk_pdfs(pdf_file_path, codigo_trabajo_path)
+            if CHUNKS_GLOBAL:
+                save_cache(CHUNKS_GLOBAL, CHUNKS_CACHE)
+                CORPUS_GLOBAL, VECTORIZER_GLOBAL, CORPUS_VECS_GLOBAL = precalculate_tfidf_vectors(CHUNKS_GLOBAL)
+                save_cache((CORPUS_GLOBAL, VECTORIZER_GLOBAL, CORPUS_VECS_GLOBAL), TFIDF_CACHE)
+                print("PDFs procesados y cacheados.")
+            else:
+                DOC_LOAD_ERROR = True
+    except Exception as e:
+        print("Error cargando o guardando el cache:", e)
         DOC_LOAD_ERROR = True
+
+# --- Carga de PDFs e índices optimizada ---
+if not DOC_LOAD_ERROR:
+    load_all_with_cache()
 
 @app.route('/')
 def index():
