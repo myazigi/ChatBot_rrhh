@@ -5,10 +5,185 @@
     <title>Aura ChatBot de RRHH</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    /* ... Tus estilos CSS aquí, omite cualquier estilo Jinja antiguo ... */
-    </style>
-    <style>
-        /* ... spinner thinking-indicator ... */
+        body {
+            background: #ececf1;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+        }
+        .top-bar-flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f2fdf6;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            padding: 18px 18px 13px 18px;
+        }
+        .chat-title-bar-centered {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.32rem;
+            font-weight: 600;
+            color: #128c7e;
+        }
+        .main-flex {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .chat-outerbox {
+            display: flex;
+            flex-direction: row;
+            gap: 24px;
+            width: 100%;
+            max-width: 820px;
+        }
+        .pdf-sidebar-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-width: 150px;
+        }
+        .pdf-link-minimal {
+            color: #128c7e;
+            background: #f5f5f5;
+            border-radius: 7px;
+            padding: 10px 14px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .pdf-link-minimal:hover {
+            background: #25d366;
+            color: #fff;
+            transform: translateX(8px) scale(1.05);
+            box-shadow: 0 6px 24px rgba(37,213,102,0.13), 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .chat-main-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .chat-container {
+            max-width: 520px;
+            min-height: 70vh;
+            max-height: 80vh;
+            margin: 0 auto 0 auto;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 18px 10px 90px 10px;
+            position: relative;
+            overflow-y: auto;
+            background: #fff;
+        }
+        .msg-meta {
+            font-size: 0.78em;
+            color: #8b9194;
+            margin-top: 0;
+            margin-bottom: 2px;
+            padding-left: 2px;
+        }
+        .msg-user {
+            background: #dcf8c6;
+            color: #303030;
+            padding: .7rem 1.1rem;
+            border-radius: 10px 10px 0 18px;
+            margin-bottom: 4px;
+            align-self: flex-end;
+            max-width: 80%;
+            font-size: 1.04rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            word-break: break-word;
+        }
+        .msg-bot {
+            background: #fff;
+            color: #303030;
+            padding: .7rem 1.1rem;
+            border-radius: 10px 10px 18px 0;
+            margin-bottom: 4px;
+            align-self: flex-start;
+            max-width: 80%;
+            border: 1px solid #e0e0e0;
+            font-size: 1.04rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            word-break: break-word;
+        }
+        .feedback-row {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .feedback-btn {
+            background: #f2fdf6;
+            border: 1px solid #b2dfdb;
+            border-radius: 6px;
+            padding: 2px 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.15s, border 0.15s;
+        }
+        .feedback-btn.selected, .feedback-btn:active {
+            background: #25d366;
+            color: #fff;
+            border: 1px solid #25d366;
+        }
+        .wa-input-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            background: #f7f7f7;
+            box-shadow: 0 -1px 8px rgba(0,0,0,0.04);
+            padding: 1rem 0;
+            z-index: 101;
+            display: flex;
+            justify-content: center;
+        }
+        .wa-input-inner {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 420px;
+        }
+        .wa-input-box {
+            flex: 1 1 auto;
+            border: 1.5px solid #d1d7db;
+            border-radius: 12px;
+            padding: .7rem 1rem;
+            font-size: 1.08rem;
+            outline: none;
+            background: #fff;
+            transition: border 0.2s;
+        }
+        .wa-input-box:focus {
+            border: 1.5px solid #25d366;
+        }
+        .wa-send-btn {
+            background: #25d366;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: .7rem 1.3rem;
+            font-size: 1.09rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .wa-send-btn:hover {
+            background: #128c7e;
+        }
         .thinking-indicator {
             position: fixed;
             bottom: 70px;
@@ -39,10 +214,14 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        @media (max-width: 900px) {
+            .main-flex, .chat-outerbox { flex-direction: column; align-items: stretch; }
+            .pdf-sidebar-vertical { flex-direction: row; gap: 10px; margin-bottom: 10px; }
+            .chat-container { max-width: 99vw; min-height: 55vh; max-height: 65vh; padding: 8px 2vw 90px 2vw; }
+        }
     </style>
 </head>
 <body>
-<<<<<<< HEAD
     <div class="top-bar-flex">
         <div class="chat-title-bar-centered">
             <span class="chat-title-icon">🤖</span>
@@ -77,7 +256,7 @@
         <span class="spinner"></span> Aura está pensando...
     </div>
     <script>
-        // --- Efecto máquina de escribir SOLO para el último mensaje del bot ---
+        // Efecto máquina de escribir SOLO para el último mensaje del bot
         function typeWriterEffect(element, text, delay = 18, callback) {
             let i = 0;
             function type() {
@@ -92,235 +271,150 @@
             type();
         }
 
-        // --- Scroll automático al final ---
-        function scrollToBottom() {
-            var chatContainer = document.getElementById('chat-container');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        // --- Persistencia en localStorage ---
-        function saveChatToLocal() {
-            localStorage.setItem('chatHistory', document.getElementById('chat-container').innerHTML);
-        }
-        function restoreChatFromLocal() {
-            let saved = localStorage.getItem('chatHistory');
-            if(saved) document.getElementById('chat-container').innerHTML = saved;
-        }
-
-        // --- Botón bajar al final ---
-        window.onload = function() {
-            scrollToBottom();
-            document.getElementById('chat-container').focus();
-            restoreChatFromLocal();
-            loadChatHistory();
-        };
-=======
-<div class="top-bar-flex">
-    <div class="chat-title-bar-centered">
-        <span class="chat-title-icon">🤖</span>
-        <span class="chat-title">Aura ChatBot de RRHH</span>
-    </div>
-</div>
-<div class="main-flex">
-    <div class="chat-outerbox">
-        <aside class="pdf-sidebar-vertical">
-            <a class="pdf-link-minimal" href="/static/Prueba4.pdf" download title="Manual del Empleado">📄 Manual del Empleado</a>
-            <a class="pdf-link-minimal" href="/static/Código%20del%20Trabajo-Chile.pdf" download title="Código del Trabajo">📄 Código del Trabajo</a>
-        </aside>
-        <div class="chat-main-area">
-            <button id="scroll-bottom-btn" aria-label="Bajar al final" style="display:none;position:fixed;bottom:110px;right:30px;z-index:105;background:#25d366;color:#fff;border:none;border-radius:50%;width:42px;height:42px;box-shadow:0 2px 8px rgba(0,0,0,0.12);font-size:1.6em;cursor:pointer;">↓</button>
-            <div class="chat-container" id="chat-container" tabindex="0" role="log" aria-live="polite" aria-label="Historial de chat">
-                <!-- Renderizado solo por JS -->
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                <button id="new-conv-btn" type="button" style="background:#128c7e;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:1em;cursor:pointer;">Nueva conversación</button>
-                <button id="download-chat-btn" type="button" style="background:#b2dfdb;color:#222;border:none;border-radius:8px;padding:7px 16px;font-size:1em;cursor:pointer;">Descargar historial</button>
-            </div>
-            <form class="wa-input-bar" id="chat-form" method="post" action="/send_message">
-                <div class="wa-input-inner">
-                    <input type="text" class="wa-input-box" name="message" id="message" placeholder="Escribe tu mensaje..." autocomplete="off" required>
-                    <button type="submit" class="wa-send-btn">Enviar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<div id="thinking-indicator" class="thinking-indicator" style="display:none;">
-    <span class="spinner"></span> Aura está pensando...
-</div>
-
-<script>
-// Usar Jinja default([]) para asegurar que existe y sea válido JSON JS.
-window.initialChatFromServer = {{ chat|default([])|tojson|safe }};
-</script>
-
-<script>
-    // Borra historial local al cargar para forzar efecto máquina de escribir en recargas
-    localStorage.removeItem('chatSession');
-
-    function typeWriterEffect(element, text, speed = 21, callback = null) {
-        if (!element || !text) return;
-        element.innerHTML = "";
-        let i = 0;
-        function typing() {
-            if (i < text.length) {
-                element.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typing, speed);
-            } else if (callback) {
-                callback();
-            }
-        }
-        typing();
-    }
-
-    function renderChat(chat) {
-        const chatContainer = document.getElementById('chat-container');
-        let chatHtml = '';
-        let lastBotIndex = -1;
-        
-        chat.forEach(function(msg, idx) {
-            if (msg.role === 'user') {
-                chatHtml += `<div class='msg-meta'>Tú | ${msg.timestamp || ""}</div><div class='msg-user msg-bubble-user'>${msg.content}</div>`;
-            } else if (msg.role === 'assistant') {
-                lastBotIndex = idx;
-                chatHtml += `<div class='msg-meta'>Aura | ${msg.timestamp || ""}</div>`;
-                
-                // Efecto máquina de escribir SOLO para el último mensaje de bot
-                if (idx === chat.length - 1) {
-                    chatHtml += `<div class='msg-bot msg-bubble-bot'>
-                        <span class="typewriter-effect"></span>
+        // Renderiza el historial de chat
+        function renderChat(chat) {
+            const chatContainer = document.getElementById('chat-container');
+            let chatHtml = '';
+            let lastBotIndex = -1;
+            chat.forEach(function(msg, idx) {
+                if (msg.role === 'user') {
+                    chatHtml += `<div class='msg-meta'>Tú | ${msg.timestamp || ""}</div><div class='msg-user msg-bubble-user'>${msg.content}</div>`;
+                } else if (msg.role === 'assistant') {
+                    lastBotIndex = idx;
+                    chatHtml += `<div class='msg-meta'>Aura | ${msg.timestamp || ""}</div>`;
+                    // Efecto máquina de escribir SOLO para el último mensaje de bot
+                    if (idx === chat.length - 1) {
+                        chatHtml += `<div class='msg-bot msg-bubble-bot'><span class="typewriter-effect"></span>
                         <div class='feedback-row'><span class='feedback-label'>¿Te fue útil?</span>
                             <button class='feedback-btn' data-feedback='up' title='Útil'>👍</button>
                             <button class='feedback-btn' data-feedback='down' title='No útil'>👎</button>
-                        </div>
-                    </div>`;
-                } else {
-                    chatHtml += `<div class='msg-bot msg-bubble-bot'>${msg.content}
+                        </div></div>`;
+                    } else {
+                        chatHtml += `<div class='msg-bot msg-bubble-bot'>${msg.content}
                         <div class='feedback-row'><span class='feedback-label'>¿Te fue útil?</span>
                             <button class='feedback-btn' data-feedback='up' title='Útil'>👍</button>
                             <button class='feedback-btn' data-feedback='down' title='No útil'>👎</button>
-                        </div>
-                    </div>`;
+                        </div></div>`;
+                    }
                 }
-            }
-        });
-        
-        chatContainer.innerHTML = chatHtml;
-
-        // Aplica el efecto al último mensaje del bot
-        if (lastBotIndex >= 0 && lastBotIndex === chat.length - 1) {
-            setTimeout(function() {
-                const lastBot = chat[lastBotIndex];
-                const el = document.querySelector('.typewriter-effect');
-                if (el && lastBot && lastBot.content) {
-                    el.innerHTML = '';
-                    typeWriterEffect(el, lastBot.content, 21, function() {
+            });
+            chatContainer.innerHTML = chatHtml;
+            // Aplica el efecto al último mensaje del bot
+            if (lastBotIndex >= 0 && lastBotIndex === chat.length - 1) {
+                setTimeout(function() {
+                    const lastBot = chat[lastBotIndex];
+                    const el = document.querySelector('.typewriter-effect');
+                    if (el && lastBot && lastBot.content) {
+                        el.innerHTML = '';
+                        typeWriterEffect(el, lastBot.content, 21, function() {
+                            chatContainer.scrollTop = chatContainer.scrollHeight;
+                            saveChatToLocal();
+                        });
+                    } else {
                         chatContainer.scrollTop = chatContainer.scrollHeight;
                         saveChatToLocal();
-                    });
-                } else {
+                    }
+                }, 10);
+            } else {
+                setTimeout(function () {
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                     saveChatToLocal();
-                }
-            }, 10);
-        } else {
-            setTimeout(function () {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-                saveChatToLocal();
-            }, 60);
-        }
-        
-        // Activar botones de feedback
-        activateFeedbackButtons();
-    }
-
-    function saveChatToLocal() {
-        if (!window._lastChat) return;
-        localStorage.setItem('chatSession', JSON.stringify(window._lastChat));
-    }
-
-    // Feedback
-    function activateFeedbackButtons() {
-        document.querySelectorAll('.feedback-btn').forEach(btn => {
-            btn.onclick = function () {
-                btn.classList.add('selected');
-                btn.blur();
-                setTimeout(() => btn.classList.remove('selected'), 1000);
-                // Aquí puedes enviar el feedback al backend si lo deseas
-            };
-        });
-    }
-
-    // Agrupar TODO el acceso y registro de eventos DOM dentro de onload para evitar errores por elementos no definidos
-    window.onload = function () {
-        if (window.initialChatFromServer) {
-            window._lastChat = window.initialChatFromServer;
-            renderChat(window._lastChat || []);
-        }
-        document.getElementById('chat-container').focus();
-
-        // Botón bajar al final
->>>>>>> f4f0a5c69bf7e50f609781f9b5d0f6cd169a7a6a
-        const scrollBtn = document.getElementById('scroll-bottom-btn');
-        const chatContainer = document.getElementById('chat-container');
-        chatContainer.addEventListener('scroll', function () {
-            if (chatContainer.scrollTop < chatContainer.scrollHeight - chatContainer.clientHeight - 80) {
-                scrollBtn.style.display = 'block';
-                scrollBtn.style.opacity = 1;
-            } else {
-                scrollBtn.style.opacity = 0;
-                setTimeout(() => { scrollBtn.style.display = 'none'; }, 250);
+                }, 60);
             }
-        });
-        scrollBtn.onclick = function() {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        };
-        scrollBtn.onkeydown = function(e) { if(e.key==='Enter'||e.key===' '){chatContainer.scrollTop = chatContainer.scrollHeight;} };
+            activateFeedbackButtons();
+        }
 
-<<<<<<< HEAD
-        // --- Nueva conversación ---
-        document.getElementById('new-conv-btn').onclick = function() {
-=======
-        // Nueva conversación
-        document.getElementById('new-conv-btn').onclick = function () {
->>>>>>> f4f0a5c69bf7e50f609781f9b5d0f6cd169a7a6a
-            if (confirm('¿Seguro que deseas iniciar una nueva conversación? Se perderá el historial actual.')) {
-                fetch('/reset_chat', { method: 'POST' }).then(() => {
-                    localStorage.removeItem('chatSession');
-                    location.reload();
-                });
-            }
-        };
+        function saveChatToLocal() {
+            if (!window._lastChat) return;
+            localStorage.setItem('chatSession', JSON.stringify(window._lastChat));
+        }
 
-<<<<<<< HEAD
-        // --- Descargar historial ---
-        document.getElementById('download-chat-btn').onclick = function() {
-=======
-        // Descargar historial
-        document.getElementById('download-chat-btn').onclick = function () {
->>>>>>> f4f0a5c69bf7e50f609781f9b5d0f6cd169a7a6a
-            let text = '';
-            document.querySelectorAll('.msg-meta, .msg-user, .msg-bot').forEach(el => {
-                text += el.textContent + '\n';
+        function activateFeedbackButtons() {
+            document.querySelectorAll('.feedback-btn').forEach(btn => {
+                btn.onclick = function () {
+                    btn.classList.add('selected');
+                    btn.blur();
+                    setTimeout(() => btn.classList.remove('selected'), 1000);
+                    // Aquí puedes enviar el feedback al backend si lo deseas
+                };
             });
-            let blob = new Blob([text], { type: 'text/plain' });
-            let link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'historial_chat.txt';
-            link.click();
+        }
+
+        // Inicialización y eventos
+        window.onload = function () {
+            // Cargar historial desde localStorage si existe
+            let chat = [];
+            try {
+                chat = JSON.parse(localStorage.getItem('chatSession')) || [];
+            } catch { chat = []; }
+            window._lastChat = chat;
+            renderChat(chat);
+
+            // Botón bajar al final
+            const scrollBtn = document.getElementById('scroll-bottom-btn');
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.addEventListener('scroll', function () {
+                if (chatContainer.scrollTop < chatContainer.scrollHeight - chatContainer.clientHeight - 80) {
+                    scrollBtn.style.display = 'block';
+                    scrollBtn.style.opacity = 1;
+                } else {
+                    scrollBtn.style.opacity = 0;
+                    setTimeout(() => { scrollBtn.style.display = 'none'; }, 250);
+                }
+            });
+            scrollBtn.onclick = function() {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            };
+            scrollBtn.onkeydown = function(e) { if(e.key==='Enter'||e.key===' '){chatContainer.scrollTop = chatContainer.scrollHeight;} };
+
+            // Nueva conversación
+            document.getElementById('new-conv-btn').onclick = function () {
+                if (confirm('¿Seguro que deseas iniciar una nueva conversación? Se perderá el historial actual.')) {
+                    fetch('/reset_chat', { method: 'POST' }).then(() => {
+                        localStorage.removeItem('chatSession');
+                        location.reload();
+                    });
+                }
+            };
+
+            // Descargar historial
+            document.getElementById('download-chat-btn').onclick = function () {
+                let text = '';
+                document.querySelectorAll('.msg-meta, .msg-user, .msg-bot').forEach(el => {
+                    text += el.textContent + '\n';
+                });
+                let blob = new Blob([text], { type: 'text/plain' });
+                let link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'historial_chat.txt';
+                link.click();
+            };
         };
 
-<<<<<<< HEAD
-        // --- Envío AJAX con efecto máquina de escribir solo para el último mensaje del bot ---
-        const chatForm = document.getElementById('chat-form');
-        chatForm.onsubmit = async function(e) {
+        // Envío AJAX con efecto máquina de escribir solo para el último mensaje del bot
+        document.getElementById('chat-form').onsubmit = async function (e) {
             e.preventDefault();
             var messageInput = document.getElementById('message');
             var msg = messageInput.value.trim();
             if (!msg) return;
+
+            // Añadir mensaje del usuario inmediatamente al chat
+            const userMsg = {
+                role: 'user',
+                content: msg,
+                timestamp: new Date().toLocaleTimeString().slice(0, 5)
+            };
+            if (window._lastChat && Array.isArray(window._lastChat)) {
+                window._lastChat.push(userMsg);
+                renderChat(window._lastChat);
+            } else {
+                window._lastChat = [userMsg];
+                renderChat(window._lastChat);
+            }
+
             messageInput.value = '';
             document.getElementById('thinking-indicator').style.display = 'flex';
+
             fetch('/send_message', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -329,137 +423,13 @@ window.initialChatFromServer = {{ chat|default([])|tojson|safe }};
             .then(response => response.json())
             .then(chat => {
                 if (!Array.isArray(chat) || chat.length === 0) return;
-                var chatContainer = document.getElementById('chat-container');
-                var chatHtml = '';
-                let lastDate = null;
-                chat.forEach(function(msg, idx) {
-                    let msgDate = msg.timestamp.split(':')[0];
-                    if(lastDate !== msgDate) {
-                        chatHtml += `<div class='date-separator'>${msg.timestamp}</div>`;
-                        lastDate = msgDate;
-                    }
-                    if (msg.role === 'user') {
-                        chatHtml += `<div class='msg-meta'>Tú | ${msg.timestamp}</div><div class='msg-user msg-bubble-user'>${msg.content}</div>`;
-                    } else if (msg.role === 'assistant') {
-                        // Solo el último mensaje del bot tendrá efecto máquina de escribir
-                        if (idx === chat.length - 1) {
-                            chatHtml += `<div class='msg-meta'>Aura | ${msg.timestamp}</div><div class='msg-bot msg-bubble-bot' id='typewriter-bot'></div>`;
-                        } else {
-                            chatHtml += `<div class='msg-meta'>Aura | ${msg.timestamp}</div><div class='msg-bot msg-bubble-bot'>${msg.content}<div class='feedback-row'><span class='feedback-label'>¿Te fue útil?</span><button class='feedback-btn' data-feedback='up' title='Útil'>👍</button><button class='feedback-btn' data-feedback='down' title='No útil'>👎</button></div></div>`;
-                        }
-                    }
-                });
-                chatContainer.innerHTML = chatHtml;
-                setTimeout(function() {
-                    scrollToBottom();
-                    saveChatToLocal();
-                    // Aplica efecto solo al último mensaje del bot
-                    const lastBotMsg = chat[chat.length - 1];
-                    if (lastBotMsg && lastBotMsg.role === 'assistant') {
-                        const el = document.getElementById('typewriter-bot');
-                        if (el) {
-                            // Incluye feedback al final del mensaje
-                            const feedbackHtml = `<div class='feedback-row'><span class='feedback-label'>¿Te fue útil?</span><button class='feedback-btn' data-feedback='up' title='Útil'>👍</button><button class='feedback-btn' data-feedback='down' title='No útil'>👎</button></div>`;
-                            typeWriterEffect(el, lastBotMsg.content, 18, function() {
-                                el.innerHTML += feedbackHtml;
-                                saveChatToLocal();
-                            });
-                        }
-                    }
-                }, 50);
+                window._lastChat = chat;
+                renderChat(chat);
             })
             .finally(() => {
                 document.getElementById('thinking-indicator').style.display = 'none';
             });
         };
-
-        // --- Feedback botones (delegación para nuevos elementos) ---
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('feedback-btn')) {
-                e.target.classList.add('selected');
-                e.target.blur();
-                setTimeout(()=>e.target.classList.remove('selected'), 1000);
-                // Aquí puedes enviar el feedback al backend si lo deseas
-            }
-        });
-
-        // Spinner escribiendo animado
-        document.querySelector('.thinking-indicator .spinner').classList.add('dots');
-
-        // Cargar historial inicial desde backend (si lo deseas)
-        function loadChatHistory() {
-            fetch('/get_chat')
-            .then(response => response.json())
-            .then(chat => {
-                if (!Array.isArray(chat) || chat.length === 0) return;
-                var chatContainer = document.getElementById('chat-container');
-                var chatHtml = '';
-                let lastDate = null;
-                chat.forEach(function(msg, idx) {
-                    let msgDate = msg.timestamp.split(':')[0];
-                    if(lastDate !== msgDate) {
-                        chatHtml += `<div class='date-separator'>${msg.timestamp}</div>`;
-                        lastDate = msgDate;
-                    }
-                    if (msg.role === 'user') {
-                        chatHtml += `<div class='msg-meta'>Tú | ${msg.timestamp}</div><div class='msg-user msg-bubble-user'>${msg.content}</div>`;
-                    } else if (msg.role === 'assistant') {
-                        chatHtml += `<div class='msg-meta'>Aura | ${msg.timestamp}</div><div class='msg-bot msg-bubble-bot'>${msg.content}<div class='feedback-row'><span class='feedback-label'>¿Te fue útil?</span><button class='feedback-btn' data-feedback='up' title='Útil'>👍</button><button class='feedback-btn' data-feedback='down' title='No útil'>👎</button></div></div>`;
-                    }
-                });
-                chatContainer.innerHTML = chatHtml;
-                setTimeout(function() { scrollToBottom(); saveChatToLocal(); }, 50);
-            });
-        }
     </script>
-=======
-        // Spinner escribiendo animado
-        document.querySelector('.thinking-indicator .spinner').classList.add('dots');
-    };
-
-    // AJAX para enviar mensaje y mostrar historial
-    document.getElementById('chat-form').onsubmit = async function (e) {
-        e.preventDefault();
-        var messageInput = document.getElementById('message');
-        var msg = messageInput.value.trim();
-        if (!msg) return;
-        
-        // Añadir mensaje del usuario inmediatamente al chat
-        const userMsg = {
-            role: 'user',
-            content: msg,
-            timestamp: new Date().toLocaleTimeString().slice(0, 5)
-        };
-        
-        // Si ya hay un chat, añadimos el mensaje
-        if (window._lastChat && Array.isArray(window._lastChat)) {
-            window._lastChat.push(userMsg);
-            renderChat(window._lastChat);
-        } else {
-            window._lastChat = [userMsg];
-            renderChat(window._lastChat);
-        }
-        
-        messageInput.value = '';
-        document.getElementById('thinking-indicator').style.display = 'flex';
-        
-        fetch('/send_message', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'message=' + encodeURIComponent(msg)
-        })
-        .then(response => response.json())
-        .then(chat => {
-            if (!Array.isArray(chat) || chat.length === 0) return;
-            window._lastChat = chat;
-            renderChat(chat);
-        })
-        .finally(() => {
-            document.getElementById('thinking-indicator').style.display = 'none';
-        });
-    };
-
-</script>
->>>>>>> f4f0a5c69bf7e50f609781f9b5d0f6cd169a7a6a
 </body>
 </html>

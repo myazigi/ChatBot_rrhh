@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # --- Variables de backend LLM ---
-LLM_API_URL = os.environ.get("LLM_API_URL", "http://http://100.75.196.68:1234/v1/chat/completions")
+LLM_API_URL = os.environ.get("LLM_API_URL", "http://localhost:1234/v1/chat/completions")
 LLM_MODEL_NAME = os.environ.get("LLM_MODEL_NAME", "llama4-dolphin-8b")
 try:
     name_parts = re.split(r'[:/-]', LLM_MODEL_NAME)
