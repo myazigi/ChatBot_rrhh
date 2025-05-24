@@ -53,14 +53,13 @@
             align-items: center;
             justify-content: center;
             flex: 1 1 0%;
-            background: #f2fdf6;
-            border-radius: 0 0 18px 18px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            background: #343541;
+            border-bottom: 1px solid #565869;
             padding: 18px 18px 13px 18px;
             font-size: 1.32rem;
             font-weight: 600;
             letter-spacing: 0.5px;
-            color: #128c7e;
+            color: #ECECF1;
             min-width: 310px;
         }
         .pdf-topbox-minimal {
@@ -74,8 +73,8 @@
             padding: 0 14px 0 0;
         }
         .pdf-link-minimal {
-            color: #128c7e;
-            background: #f5f5f5;
+            color: #19C37D;
+            background: #40414f;
             border-radius: 7px;
             padding: 10px 14px;
             text-decoration: none;
@@ -89,10 +88,10 @@
             will-change: transform, box-shadow;
         }
         .pdf-link-minimal:hover {
-            background: #25d366;
+            background: #19C37D;
             color: #fff;
             transform: translateX(8px) scale(1.05);
-            box-shadow: 0 6px 24px rgba(37,213,102,0.13), 0 2px 8px rgba(0,0,0,0.03);
+            box-shadow: 0 6px 24px rgba(37,195,125,0.13), 0 2px 8px rgba(0,0,0,0.03);
         }
         @media (max-width: 900px) {
             .top-bar-flex {
@@ -111,7 +110,7 @@
         }
         /* --- Caja PDF --- */
         .pdf-topbox {
-            background: #f9fafb;
+            background: #40414f;
             border-radius: 14px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.04);
             padding: 18px 18px 12px 18px;
@@ -125,13 +124,15 @@
         .pdf-title {
             font-size: 1.13em;
             font-weight: 600;
-            color: #128c7e;
+            color: #19C37D;
             margin-bottom: 4px;
             letter-spacing: 0.2px;
         }
         .pdf-link-box {
             display: flex;
             align-items: center;
+            transition: background 0.18s, color 0.18s;
+            font-weight: 500;
             color: #1a4d3a;
             background: #e8f5e9;
             border-radius: 7px;
@@ -139,8 +140,6 @@
             margin-bottom: 3px;
             text-decoration: none;
             font-size: 1em;
-            transition: background 0.18s, color 0.18s;
-            font-weight: 500;
         }
         .pdf-link-box:hover {
             background: #25d366;
@@ -152,34 +151,34 @@
         }
         .pdf-topbar, .pdf-sidebar { display: none !important; }
         /* --- Chat y mensajes --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #ECECF1;
+            background-color: #343541;
+            margin: 0;
+            padding: 0;
+        }
         .chat-container {
-            max-width: 520px;
+            max-width: 800px;
             min-height: 70vh;
             max-height: 80vh;
-            margin: 32px auto 0 auto;
-            border-radius: 18px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding: 18px 10px 90px 10px;
-            position: relative;
+            margin: 0 auto;
+            padding: 20px 16px 120px 16px;
             overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #b2dfdb #f2fdf6;
+            scroll-behavior: smooth;
+            background-color: #343541;
         }
-
         /* Scrollbar para Chrome/Webkit */
         .chat-container::-webkit-scrollbar {
             width: 8px;
-            background: #f2fdf6;
+            background: #40414f;
             border-radius: 8px;
         }
         .chat-container::-webkit-scrollbar-thumb {
-            background: #b2dfdb;
+            background: #565869;
             border-radius: 8px;
         }
-
         @media (max-width: 700px) {
             .chat-container {
                 max-width: 99vw;
@@ -220,12 +219,22 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.03);
             word-break: break-word;
         }
+        .input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #40414f;
+            padding: 12px 0;
+            border-top: 1px solid #565869;
+            z-index: 1000;
+        }
         .wa-input-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100vw;
-            background: #f7f7f7;
+            background: #40414f;
             box-shadow: 0 -1px 8px rgba(0,0,0,0.04);
             padding: 1rem 0;
             z-index: 101;
@@ -238,20 +247,24 @@
             width: 100%;
             max-width: 420px;
         }
-        .wa-input-box {
-            flex: 1 1 auto;
-            border: 1.5px solid #d1d7db;
-            border-radius: 12px;
-            padding: .7rem 1rem;
-            font-size: 1.08rem;
+        #user-input {
+            padding: 12px 16px;
+            background-color: #40414f;
+            color: #ECECF1;
+            border: 1px solid #565869;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1em;
             outline: none;
-            background: #fff;
-            transition: border 0.2s;
+            transition: border-color 0.3s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
-        .wa-input-box:focus {
-            border: 1.5px solid #25d366;
+        #user-input:focus {
+            border: 1px solid #19C37D;
         }
         .wa-send-btn {
+            background-color: #19C37D;
+            color: white;
             background: #25d366;
             color: #fff;
             border: none;
@@ -311,76 +324,115 @@
 </head>
 <body>
     <div class="top-bar-flex">
-        <div class="chat-title-bar-centered">
-            <span class="chat-title-icon">🤖</span>
-            <span class="chat-title">Aura ChatBot de RRHH</span>
-        </div>
+    <div class="chat-title-bar-centered">
+        <span class="chat-title-icon">🤖</span>
+        <span class="chat-title">Aura ChatBot de RRHH</span>
     </div>
-    <div class="main-flex">
-        <div class="chat-outerbox">
-            <aside class="pdf-sidebar-vertical">
-                <a class="pdf-link-minimal" href="/static/Prueba4.pdf" download title="Manual del Empleado">📄 Manual del Empleado</a>
-                <a class="pdf-link-minimal" href="/static/Código%20del%20Trabajo-Chile.pdf" download title="Código del Trabajo">📄 Código del Trabajo</a>
-            </aside>
-            <div class="chat-main-area">
-                <button id="scroll-bottom-btn" aria-label="Bajar al final" style="display:none;position:fixed;bottom:110px;right:30px;z-index:105;background:#25d366;color:#fff;border:none;border-radius:50%;width:42px;height:42px;box-shadow:0 2px 8px rgba(0,0,0,0.12);font-size:1.6em;cursor:pointer;">↓</button>
-                <div class="chat-container" id="chat-container" tabindex="0" role="log" aria-live="polite" aria-label="Historial de chat">
-                    <!-- El historial se renderiza por JS -->
-                </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                    <button id="new-conv-btn" type="button" style="background:#128c7e;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:1em;cursor:pointer;">Nueva conversación</button>
-                    <button id="download-chat-btn" type="button" style="background:#b2dfdb;color:#222;border:none;border-radius:8px;padding:7px 16px;font-size:1em;cursor:pointer;">Descargar historial</button>
-                </div>
-                <form class="wa-input-bar" id="chat-form" method="post" action="/send_message">
-                    <div class="wa-input-inner">
-                        <input type="text" class="wa-input-box" name="message" id="message" placeholder="Escribe tu mensaje..." autocomplete="off" required>
-                        <button type="submit" class="wa-send-btn">Enviar</button>
-                    </div>
-                </form>
+</div>
+<div class="main-flex">
+    <div class="chat-outerbox">
+        <aside class="pdf-sidebar-vertical">
+            <a class="pdf-link-minimal" href="/static/Prueba4.pdf" download title="Manual del Empleado">📄 Manual del Empleado</a>
+            <a class="pdf-link-minimal" href="/static/Código%20del%20Trabajo-Chile.pdf" download title="Código del Trabajo">📄 Código del Trabajo</a>
+        </aside>
+        <div class="chat-main-area">
+            <button id="scroll-bottom-btn" aria-label="Bajar al final" style="display:none;position:fixed;bottom:110px;right:30px;z-index:105;background:#25d366;color:#fff;border:none;border-radius:50%;width:42px;height:42px;box-shadow:0 2px 8px rgba(0,0,0,0.12);font-size:1.6em;cursor:pointer;">↓</button>
+            <div class="chat-container" id="chat-container" tabindex="0" role="log" aria-live="polite" aria-label="Historial de chat">
+                {% if error %}
+                    <div class="error-msg">{{ error }}</div>
+                {% endif %}
+                {% set last_date = None %}
+                {% for msg in chat %}
+                    {% set msg_date = msg.timestamp.split(':')[0] %} {# Suponiendo timestamp HH:MM, para demo. Mejor usar fecha real en backend #}
+                    {% if last_date != msg_date %}
+                        <div class="date-separator">{{ msg.timestamp }}</div>
+                        {% set last_date = msg_date %}
+                    {% endif %}
+                    {% if msg.role == 'user' %}
+                        <div class="msg-meta">Tú | {{ msg.timestamp }}</div>
+                        <div class="msg-user msg-bubble-user">{{ msg.content }}</div>
+                    {% elif msg.role == 'assistant' %}
+                        <div class="msg-meta">Aura | {{ msg.timestamp }}</div>
+                        <div class="msg-bot msg-bubble-bot">{{ msg.content|safe }}
+                            <div class="feedback-row">
+                                <span class="feedback-label">¿Te fue útil?</span>
+                                <button class="feedback-btn" data-feedback="up" title="Útil">👍</button>
+                                <button class="feedback-btn" data-feedback="down" title="No útil">👎</button>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <button id="new-conv-btn" type="button" style="background:#128c7e;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:1em;cursor:pointer;">Nueva conversación</button>
+                <button id="download-chat-btn" type="button" style="background:#b2dfdb;color:#222;border:none;border-radius:8px;padding:7px 16px;font-size:1em;cursor:pointer;">Descargar historial</button>
+            </div>
+            <form class="wa-input-bar" id="chat-form" method="post" action="/send_message">
+                <div class="wa-input-inner">
+                    <input type="text" class="wa-input-box" name="message" id="message" placeholder="Escribe tu mensaje..." autocomplete="off" required>
+                    <button type="submit" class="wa-send-btn">Enviar</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
     <div id="thinking-indicator" class="thinking-indicator" style="display:none;">
         <span class="spinner"></span> Aura está pensando...
     </div>
     <script>
-        // --- Efecto máquina de escribir SOLO para el último mensaje del bot ---
-        function typeWriterEffect(element, text, delay = 18, callback) {
-            let i = 0;
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, delay);
-                } else if (callback) {
-                    callback();
-                }
-            }
-            type();
-        }
-
-        // --- Scroll automático al final ---
+        // Scroll automático al final
+        window.onload = function() {
+            var chatContainer = document.getElementById('chat-container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        };
+        // Envío AJAX para experiencia fluida
+        document.getElementById('chat-form').onsubmit = async function(e) {
+            e.preventDefault();
+            var messageInput = document.getElementById('message');
+            var msg = messageInput.value.trim();
+            if (!msg) return;
+            messageInput.value = '';
+            // Mostrar indicador de pensando
+            document.getElementById('thinking-indicator').style.display = 'flex';
+            fetch('/send_message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'message=' + encodeURIComponent(msg)
+            })
+            .then(response => response.json())
+            .then(chat => {
+                // Renderiza TODO el historial de mensajes y hace scroll automático
+                if (!Array.isArray(chat) || chat.length === 0) return;
+                var chatContainer = document.getElementById('chat-container');
+                var chatHtml = '';
+                chat.forEach(function(msg) {
+                    if (msg.role === 'user') {
+                        chatHtml += `<div class='msg-meta'>Tú | ${msg.timestamp}</div><div class='msg-user'>${msg.content}</div>`;
+                    } else if (msg.role === 'assistant') {
+                        chatHtml += `<div class='msg-meta'>Aura | ${msg.timestamp}</div><div class='msg-bot'>${msg.content}</div>`;
+                    }
+                });
+                chatContainer.innerHTML = chatHtml;
+                setTimeout(function() {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 50);
+            })
+            .finally(() => {
+                // Ocultar indicador de pensando
+                document.getElementById('thinking-indicator').style.display = 'none';
+            });
+        };
+        // --- Accesibilidad y scroll automático ---
         function scrollToBottom() {
             var chatContainer = document.getElementById('chat-container');
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
-
-        // --- Persistencia en localStorage ---
-        function saveChatToLocal() {
-            localStorage.setItem('chatHistory', document.getElementById('chat-container').innerHTML);
-        }
-        function restoreChatFromLocal() {
-            let saved = localStorage.getItem('chatHistory');
-            if(saved) document.getElementById('chat-container').innerHTML = saved;
-        }
-
-        // --- Botón bajar al final ---
         window.onload = function() {
             scrollToBottom();
             document.getElementById('chat-container').focus();
             restoreChatFromLocal();
-            loadChatHistory();
         };
+        // Botón bajar al final
         const scrollBtn = document.getElementById('scroll-bottom-btn');
         const chatContainer = document.getElementById('chat-container');
         chatContainer.addEventListener('scroll', function() {
@@ -395,7 +447,7 @@
         scrollBtn.onclick = scrollToBottom;
         scrollBtn.onkeydown = function(e) { if(e.key==='Enter'||e.key===' '){scrollToBottom();} };
 
-        // --- Nueva conversación ---
+        // Nueva conversación
         document.getElementById('new-conv-btn').onclick = function() {
             if (confirm('¿Seguro que deseas iniciar una nueva conversación? Se perderá el historial actual.')) {
                 fetch('/reset_chat', {method:'POST'}).then(()=>{
@@ -404,8 +456,7 @@
                 });
             }
         };
-
-        // --- Descargar historial ---
+        // Descargar historial
         document.getElementById('download-chat-btn').onclick = function() {
             let text = '';
             document.querySelectorAll('.msg-meta, .msg-user, .msg-bot').forEach(el => {
@@ -417,8 +468,24 @@
             link.download = 'historial_chat.txt';
             link.click();
         };
-
-        // --- Envío AJAX con efecto máquina de escribir solo para el último mensaje del bot ---
+        // Feedback
+        document.querySelectorAll('.feedback-btn').forEach(btn => {
+            btn.onclick = function() {
+                btn.classList.add('selected');
+                btn.blur();
+                setTimeout(()=>btn.classList.remove('selected'), 1000);
+                // Aquí puedes enviar el feedback al backend si lo deseas
+            };
+        });
+        // Persistencia en localStorage
+        function saveChatToLocal() {
+            localStorage.setItem('chatHistory', document.getElementById('chat-container').innerHTML);
+        }
+        function restoreChatFromLocal() {
+            let saved = localStorage.getItem('chatHistory');
+            if(saved) document.getElementById('chat-container').innerHTML = saved;
+        }
+        // Guarda historial tras cada envío
         const chatForm = document.getElementById('chat-form');
         chatForm.onsubmit = async function(e) {
             e.preventDefault();
@@ -438,70 +505,7 @@
                 var chatContainer = document.getElementById('chat-container');
                 var chatHtml = '';
                 let lastDate = null;
-                chat.forEach(function(msg, idx) {
-                    let msgDate = msg.timestamp.split(':')[0];
-                    if(lastDate !== msgDate) {
-                        chatHtml += `<div class='date-separator'>${msg.timestamp}</div>`;
-                        lastDate = msgDate;
-                    }
-                    if (msg.role === 'user') {
-                        chatHtml += `<div class='msg-meta'>Tú | ${msg.timestamp}</div><div class='msg-user msg-bubble-user'>${msg.content}</div>`;
-                    } else if (msg.role === 'assistant') {
-                        // Solo el último mensaje del bot tendrá efecto máquina de escribir
-                        if (idx === chat.length - 1) {
-                            chatHtml += `<div class='msg-meta'>Aura | ${msg.timestamp}</div><div class='msg-bot msg-bubble-bot' id='typewriter-bot'></div>`;
-                        } else {
-                            chatHtml += `<div class='msg-meta'>Aura | ${msg.timestamp}</div><div class='msg-bot msg-bubble-bot'>${msg.content}<div class='feedback-row'><span class='feedback-label'>¿Te fue útil?</span><button class='feedback-btn' data-feedback='up' title='Útil'>👍</button><button class='feedback-btn' data-feedback='down' title='No útil'>👎</button></div></div>`;
-                        }
-                    }
-                });
-                chatContainer.innerHTML = chatHtml;
-                setTimeout(function() {
-                    scrollToBottom();
-                    saveChatToLocal();
-                    // Aplica efecto solo al último mensaje del bot
-                    const lastBotMsg = chat[chat.length - 1];
-                    if (lastBotMsg && lastBotMsg.role === 'assistant') {
-                        const el = document.getElementById('typewriter-bot');
-                        if (el) {
-                            // Incluye feedback al final del mensaje
-                            const feedbackHtml = `<div class='feedback-row'><span class='feedback-label'>¿Te fue útil?</span><button class='feedback-btn' data-feedback='up' title='Útil'>👍</button><button class='feedback-btn' data-feedback='down' title='No útil'>👎</button></div>`;
-                            typeWriterEffect(el, lastBotMsg.content, 18, function() {
-                                el.innerHTML += feedbackHtml;
-                                saveChatToLocal();
-                            });
-                        }
-                    }
-                }, 50);
-            })
-            .finally(() => {
-                document.getElementById('thinking-indicator').style.display = 'none';
-            });
-        };
-
-        // --- Feedback botones (delegación para nuevos elementos) ---
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('feedback-btn')) {
-                e.target.classList.add('selected');
-                e.target.blur();
-                setTimeout(()=>e.target.classList.remove('selected'), 1000);
-                // Aquí puedes enviar el feedback al backend si lo deseas
-            }
-        });
-
-        // Spinner escribiendo animado
-        document.querySelector('.thinking-indicator .spinner').classList.add('dots');
-
-        // Cargar historial inicial desde backend (si lo deseas)
-        function loadChatHistory() {
-            fetch('/get_chat')
-            .then(response => response.json())
-            .then(chat => {
-                if (!Array.isArray(chat) || chat.length === 0) return;
-                var chatContainer = document.getElementById('chat-container');
-                var chatHtml = '';
-                let lastDate = null;
-                chat.forEach(function(msg, idx) {
+                chat.forEach(function(msg) {
                     let msgDate = msg.timestamp.split(':')[0];
                     if(lastDate !== msgDate) {
                         chatHtml += `<div class='date-separator'>${msg.timestamp}</div>`;
@@ -515,8 +519,13 @@
                 });
                 chatContainer.innerHTML = chatHtml;
                 setTimeout(function() { scrollToBottom(); saveChatToLocal(); }, 50);
+            })
+            .finally(() => {
+                document.getElementById('thinking-indicator').style.display = 'none';
             });
-        }
+        };
+        // Spinner escribiendo animado
+        document.querySelector('.thinking-indicator .spinner').classList.add('dots');
     </script>
 </body>
 </html>
