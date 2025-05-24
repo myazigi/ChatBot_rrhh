@@ -1,0 +1,27 @@
+[
+  {
+    "content": "¡Hola! Soy Aura ✨. ¿Consultas sobre el Manual o Código del Trabajo?",
+    "role": "assistant",
+    "timestamp": "15:31"
+  },
+  {
+    "content": "hablame sobre las licencias medicas",
+    "role": "user",
+    "timestamp": "15:31"
+  },
+  {
+    "content": "Respuesta: Las licencias médicas son un tipo de permiso que se concede a un empleado por motivo de salud. Estas pueden ser para tratamientos médicos, enfermedades o situaciones relacionadas con el embarazo. De acuerdo con la información del Manual en la página ~17, además de las licencias médicas, los empleados también pueden solicitar una licencia por incapacidad temporal para adaptarse a una lesión o discapacidad de acuerdo a la ADA o FEHA. Estas licencias se otorgarán junto con cualquier otra licencia médica a la que el empleado tenga derecho.",
+    "role": "assistant",
+    "timestamp": "15:32"
+  },
+  {
+    "role": "user",
+    "content": "hablame sobre las vacaciones",
+    "timestamp": "15:33"
+  },
+  {
+    "role": "assistant",
+    "content": "Respuesta: Las vacaciones son importantes para descansar y recargarse. ¿Cuál es su opinión sobre cómo pasar las vacaciones?",
+    "timestamp": "15:33"
+  }
+]

@@ -6,6 +6,7 @@ import traceback
 import requests
 import PyPDF2
 import pickle
+import uuid
 from datetime import datetime
 from typing import List, Dict, Any, Tuple, Optional
 from flask import Flask, render_template, request, jsonify, session
@@ -34,6 +35,11 @@ CACHE_DIR = os.path.join(script_dir, "cache")
 os.makedirs(CACHE_DIR, exist_ok=True)
 CHUNKS_CACHE = os.path.join(CACHE_DIR, "chunks.pkl")
 TFIDF_CACHE = os.path.join(CACHE_DIR, "tfidf.pkl")
+CTX_CACHE = os.path.join(CACHE_DIR, "ctx_cache.pkl")
+
+# --- Carpeta para guardar conversaciones históricas ---
+CONV_DIR = os.path.join(script_dir, "conversations")
+os.makedirs(CONV_DIR, exist_ok=True)
 
 # Verificación clara de existencia de los PDFs
 DOC_LOAD_ERROR = False
@@ -57,12 +63,16 @@ CORPUS_GLOBAL = None
 VECTORIZER_GLOBAL = None
 CORPUS_VECS_GLOBAL = None
 
-
-if not os.path.exists(codigo_trabajo_path):
-    DOC_LOAD_ERROR = True
-
 CHUNK_SIZE = 600
 CHUNK_OVERLAP = 75
+
+def save_cache(obj, path):
+    with open(path, "wb") as f:
+        pickle.dump(obj, f)
+
+def load_cache(path):
+    with open(path, "rb") as f:
+        return pickle.load(f)
 
 def load_and_chunk_pdfs(manual_path: str, codigo_path: str) -> List[Dict[str, Any]]:
     all_chunks = []
@@ -108,10 +118,30 @@ def precalculate_tfidf_vectors(chunks: List[Dict[str, Any]]):
         print(traceback.format_exc())
         return None, None, None
 
+# --- Cache de contexto relevante para preguntas repetidas ---
+def get_ctx_cache():
+    try:
+        if os.path.exists(CTX_CACHE):
+            return load_cache(CTX_CACHE)
+        else:
+            return {}
+    except Exception:
+        return {}
+
+def save_ctx_cache(cache):
+    try:
+        save_cache(cache, CTX_CACHE)
+    except Exception:
+        pass
+
 def find_relevant_context(pregunta: str, top_n: int = 1) -> Tuple[Optional[str], List[Dict[str, Any]]]:
     if DOC_LOAD_ERROR or not CHUNKS_GLOBAL or not pregunta or not pregunta.strip() or VECTORIZER_GLOBAL is None or CORPUS_VECS_GLOBAL is None:
         print("Contexto no buscado: Faltan datos o hubo error previo.")
         return None, []
+    pregunta_key = pregunta.strip().lower()
+    ctx_cache = get_ctx_cache()
+    if pregunta_key in ctx_cache:
+        return ctx_cache[pregunta_key], []
     try:
         q_vec = VECTORIZER_GLOBAL.transform([pregunta])
         sims = cosine_similarity(q_vec, CORPUS_VECS_GLOBAL)[0]
@@ -119,6 +149,8 @@ def find_relevant_context(pregunta: str, top_n: int = 1) -> Tuple[Optional[str],
         threshold = 0.05
         top_idxs = [i for i, s in ranked if s > threshold][:top_n]
         if not top_idxs:
+            ctx_cache[pregunta_key] = (None, [])
+            save_ctx_cache(ctx_cache)
             return None, []
         ctx = "Contexto relevante:\n\n"
         seen = set()
@@ -128,6 +160,8 @@ def find_relevant_context(pregunta: str, top_n: int = 1) -> Tuple[Optional[str],
                 ctx += f"Fuente: {chunk['fuente']}, Pág. ~{chunk['pagina']}\n"
                 ctx += f'"{chunk["texto"]}"\n\n'
                 seen.add(chunk["texto"])
+        ctx_cache[pregunta_key] = (ctx.strip(), [])
+        save_ctx_cache(ctx_cache)
         print(f"Contexto encontrado ({len(top_idxs)} chunks) para: '{pregunta[:50]}...'")
         return ctx.strip(), []
     except Exception as e:
@@ -167,6 +201,40 @@ def get_llm_response(system_prompt: str, user_prompt: str) -> str:
         print(traceback.format_exc())
         return f"Error LLM: {type(e).__name__}"
 
+# --- Guardar histórico de conversaciones ---
+def save_current_conversation():
+    if "chat" in session and session["chat"]:
+        conv_id = session.get("conv_id")
+        if not conv_id:
+            # Busca la primera pregunta del usuario
+            first_user_msg = next((m for m in session["chat"] if m["role"] == "user"), None)
+            if first_user_msg:
+                # Toma las primeras 6 palabras de la pregunta
+                pregunta = first_user_msg["content"].strip().replace('\n', ' ')
+                pregunta = re.sub(r'[^a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ ]', '', pregunta)
+                pregunta = '_'.join(pregunta.split()[:6])
+            else:
+                pregunta = "sin_pregunta"
+            fecha = datetime.now().strftime("%Y%m%d_%H%M")
+            conv_id = f"{fecha}_{pregunta}_{str(uuid.uuid4())[:6]}"
+            session["conv_id"] = conv_id
+        path = os.path.join(CONV_DIR, f"{conv_id}.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(session["chat"], f, ensure_ascii=False, indent=2)
+
+def list_conversations():
+    files = [f for f in os.listdir(CONV_DIR) if f.endswith(".json")]
+    files.sort(reverse=True)
+    return files
+
+def load_conversation(conv_id):
+    path = os.path.join(CONV_DIR, f"{conv_id}.json")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            session["chat"] = json.load(f)
+            session["conv_id"] = conv_id
+
+# --- Manejo de mensajes y guardado de histórico ---
 def handle_new_message(user_text: str):
     ts = datetime.now().strftime("%H:%M")
     if "chat" not in session:
@@ -198,15 +266,9 @@ def handle_new_message(user_text: str):
         "content": content,
         "timestamp": bot_ts
     })
+    save_current_conversation()  # Guarda cada vez
 
-def save_cache(obj, path):
-    with open(path, "wb") as f:
-        pickle.dump(obj, f)
-
-def load_cache(path):
-    with open(path, "rb") as f:
-        return pickle.load(f)
-
+# --- Carga de PDFs e índices optimizada ---
 def load_all_with_cache():
     global CHUNKS_GLOBAL, CORPUS_GLOBAL, VECTORIZER_GLOBAL, CORPUS_VECS_GLOBAL, DOC_LOAD_ERROR
     try:
@@ -227,7 +289,6 @@ def load_all_with_cache():
         print("Error cargando o guardando el cache:", e)
         DOC_LOAD_ERROR = True
 
-# --- Carga de PDFs e índices optimizada ---
 if not DOC_LOAD_ERROR:
     load_all_with_cache()
 
@@ -253,7 +314,26 @@ def send_message():
     session.modified = True  # Fuerza a Flask a guardar la sesión
     return jsonify(session["chat"])
 
+# --- Nuevas rutas para el histórico ---
+@app.route('/conversations')
+def conversations():
+    files = list_conversations()
+    # Devuelve lista de IDs y fechas legibles
+    return jsonify([
+        {"id": f[:-5], "name": f.replace(".json", "").replace("_", " ")}
+        for f in files
+    ])
+
+@app.route('/load_conversation/<conv_id>')
+def load_conv(conv_id):
+    load_conversation(conv_id)
+    return jsonify(session["chat"])
+
+@app.route('/reset_chat', methods=['POST'])
+def reset_chat():
+    session.pop("chat", None)
+    session.pop("conv_id", None)
+    return jsonify({"ok": True})
+
 if __name__ == '__main__':
     app.run(debug=False)
-
-#Código de `templates
