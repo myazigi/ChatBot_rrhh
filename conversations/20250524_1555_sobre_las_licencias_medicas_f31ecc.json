@@ -1,0 +1,17 @@
+[
+  {
+    "content": "¡Hola! Soy Aura ✨. ¿Consultas sobre el Manual o Código del Trabajo?",
+    "role": "assistant",
+    "timestamp": "15:53"
+  },
+  {
+    "role": "user",
+    "content": "sobre las licencias medicas",
+    "timestamp": "15:54"
+  },
+  {
+    "role": "assistant",
+    "content": "Respuesta: Las licencias médicas se conceden a empleados que requieren tiempo away del trabajo debido a razones de salud. Estas pueden incluir licencias relacionadas con enfermedades, tratamientos médicos o después de un parto. Además, los empleados también pueden solicitar una licencia por incapacidad temporal para adaptarse a una lesión o discapacidad según la ADA (Americans with Disabilities Act) o FEHA (Equal Employment Opportunity Act). Estas licencias se otorgarán concomitantemente con cualquier otra licencia médica de la que el empleado tenga derecho.",
+    "timestamp": "15:55"
+  }
+]

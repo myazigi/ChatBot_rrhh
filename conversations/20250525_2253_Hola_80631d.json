@@ -1,0 +1,17 @@
+[
+  {
+    "content": "¡Hola! Soy Aura ✨. ¿Consultas sobre el Manual o Código del Trabajo?",
+    "role": "assistant",
+    "timestamp": "22:53"
+  },
+  {
+    "role": "user",
+    "content": "Hola",
+    "timestamp": "22:53"
+  },
+  {
+    "role": "assistant",
+    "content": "Respuesta: Hola, ¿en qué puedo ayudarte? Mi nombre es Aura y soy tu asistente de RRHH conciso. Si necesitas información sobre algún documento, por favor menciona su nombre. Tono profesional y cercano.",
+    "timestamp": "22:53"
+  }
+]
