@@ -1,0 +1,17 @@
+[
+  {
+    "content": "¡Hola! Soy Aura ✨. ¿Consultas sobre el Manual o Código del Trabajo?",
+    "role": "assistant",
+    "timestamp": "15:20"
+  },
+  {
+    "role": "user",
+    "content": "dime sobre la politica de vacaciones",
+    "timestamp": "15:20"
+  },
+  {
+    "role": "assistant",
+    "content": "La política de vacaciones en Ejemplo S.A. se establece para proporcionar tiempo libre remunerado a los empleados elegibles, permitiéndoles descansar sin perder salario ni beneficios. Los empleados a tiempo completo con contrato regular son elegibles para gozar de vacaciones.\n\nSegún el esquema de acumulación, los empleados acumulan tiempo de vacaciones de acuerdo con el siguiente plan (basado en el año fiscal 2025): \n\n1. Desde l\"",
+    "timestamp": "15:21"
+  }
+]

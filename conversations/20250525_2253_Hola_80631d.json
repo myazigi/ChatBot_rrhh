@@ -5,13 +5,83 @@
     "timestamp": "22:53"
   },
   {
-    "role": "user",
     "content": "Hola",
+    "role": "user",
     "timestamp": "22:53"
   },
   {
-    "role": "assistant",
     "content": "Respuesta: Hola, ¿en qué puedo ayudarte? Mi nombre es Aura y soy tu asistente de RRHH conciso. Si necesitas información sobre algún documento, por favor menciona su nombre. Tono profesional y cercano.",
+    "role": "assistant",
     "timestamp": "22:53"
+  },
+  {
+    "content": "cual es la politica de vacaciones?",
+    "role": "user",
+    "timestamp": "11:33"
+  },
+  {
+    "content": "⚠️ Problema técnico: Error: Timeout LLM.",
+    "role": "assistant",
+    "timestamp": "11:34"
+  },
+  {
+    "content": "cual es la politica de vacaciones?",
+    "role": "user",
+    "timestamp": "11:34"
+  },
+  {
+    "content": "⚠️ Problema técnico: Error: Timeout LLM.",
+    "role": "assistant",
+    "timestamp": "11:35"
+  },
+  {
+    "content": "cual es la politica de vacaciones?",
+    "role": "user",
+    "timestamp": "11:41"
+  },
+  {
+    "content": "⚠️ Problema técnico: Error: Timeout LLM.",
+    "role": "assistant",
+    "timestamp": "11:42"
+  },
+  {
+    "content": "vacaciones",
+    "role": "user",
+    "timestamp": "14:18"
+  },
+  {
+    "content": "Respuesta: Las vacaciones para los empleados elegibles de Ejemplo S. A. se otorgan según un plan establecido por la empresa. Los empleados a tiempo completo con contrato regular son elegibles para gozar de vacaciones. El tiempo de vacaciones se acumula de acuerdo al esquema siguiente (basado en el año fiscal 2025): \n\n1. Desde l\"",
+    "role": "assistant",
+    "timestamp": "14:19"
+  },
+  {
+    "content": "politica de viajes",
+    "role": "user",
+    "timestamp": "14:40"
+  },
+  {
+    "content": "Respuesta: La política de viajes se refiere a las regulaciones y procedimientos establecidos por una empresa para gestionar y autorizar los viajes de sus empleados. En el contexto del Código de Trabajo de Chile, estas políticas pueden incluir la obligación de prestar servicios de uno o más trabajadores de la empresa usuaria al otorgamiento de permisos para efectuar viajes o cursar estudios. Sin embargo, no se encuentran expresamente contempladas en la disposición legal mencionada (Dictamen N° 5.127/63, 7.10.15). Como asistente RRHH conciso de Eres Aura, me gustaría ayudarlo con cualquier otra consulta relacionada con las políticas de viajes o cualquier otro tema del Código de Trabajo de Chile.",
+    "role": "assistant",
+    "timestamp": "14:40"
+  },
+  {
+    "content": "dime de la jornada de trabajo",
+    "role": "user",
+    "timestamp": "19:39"
+  },
+  {
+    "content": "Respuesta: Según el Código del Trabajo en Chile, artículo 21, la jornada de trabajo es el tiempo durante el cual el trabajador debe prestar efectivamente sus servicios según lo acordado. Además, se considera también jornada de trabajo el tiempo en que el trabajador se encuentra a disposición del empleador sin realizar labor por causas que no le sean imputables. La duración de la jornada ordinaria de trabajo no puede exceder ciertas horas establecidas por la ley y acuerdos entre las partes involucradas.",
+    "role": "assistant",
+    "timestamp": "19:39"
+  },
+  {
+    "role": "user",
+    "content": "cual es la duracion de la jornada de trabajo",
+    "timestamp": "19:52"
+  },
+  {
+    "role": "assistant",
+    "content": "Respuesta: Según el Código del Trabajo de Chile, en la página ~29, la duración de la jornada ordinaria de trabajo no debe exceder de 8 horas diarias. Sin embargo, hay consideraciones adicionales para días festivos y horarios de turno que pueden afectar la duración total de la semana laboral. Recomienda consultar el documento 'Código del Trabajo-Chile.pdf' para detalles adicionales.",
+    "timestamp": "19:53"
   }
 ]
