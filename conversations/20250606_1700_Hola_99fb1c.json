@@ -1,0 +1,27 @@
+[
+  {
+    "content": "¡Hola! Soy Aura ✨. ¿Consultas sobre el Manual o Código del Trabajo?",
+    "role": "assistant",
+    "timestamp": "17:00"
+  },
+  {
+    "content": "Hola",
+    "role": "user",
+    "timestamp": "17:00"
+  },
+  {
+    "content": "¡Hola! Soy Aura, tu asistente de RRHH conciso. ¿Necesitas ayuda con algo específico relacionado con los documentos 'Prueba4.pdf' o 'Código del Trabajo- Chile.pdf'? Mi tono es profesional y cercano para garantizar una experiencia óptima.",
+    "role": "assistant",
+    "timestamp": "17:00"
+  },
+  {
+    "role": "user",
+    "content": "cual es la politica por acoso sexual?",
+    "timestamp": "17:01"
+  },
+  {
+    "role": "assistant",
+    "content": "Respuesta: La política sobre acoso sexual en el lugar de trabajo se encuentra establecida en la Ley N° 16.744, específicamente en su Título IV \"DE LA PREVENCIÓN, INVESTIGACIÓN Y SANCIÓN DEL ACOSO SEXUAL, LABORAL Y LA VIOLENCIA EN EL TRABAJO\". Esta ley establece normas para prevenir, investigar y sancionar el acoso sexual ocurrido en el ámbito laboral.",
+    "timestamp": "17:01"
+  }
+]
