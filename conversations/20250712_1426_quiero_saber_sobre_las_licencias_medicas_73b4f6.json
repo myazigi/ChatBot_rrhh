@@ -1,0 +1,37 @@
+[
+  {
+    "content": "¡Hola! Soy Aura ✨. ¿Consultas sobre el Manual o Código del Trabajo?",
+    "role": "assistant",
+    "timestamp": "14:25"
+  },
+  {
+    "content": "quiero saber sobre las licencias medicas",
+    "role": "user",
+    "timestamp": "14:25"
+  },
+  {
+    "content": "⚠️ Problema técnico: Error: Timeout LLM.",
+    "role": "assistant",
+    "timestamp": "14:26"
+  },
+  {
+    "content": "quiero saber sobre las licencias medicas",
+    "role": "user",
+    "timestamp": "14:29"
+  },
+  {
+    "content": "Respuesta: Las licencias médicas son un tipo de permiso que se otorga a los empleados por motivos de salud. En el contexto proporcionado, se mencionan dos tipos de licencias médicas. Uno es la licencia por incapacidad temporal para adaptarse a una lesión o discapacidad según la ADA (Americans with Disabilities Act) o FEHA (Equal Employment Opportunity Act). Estas licencias se otorgarán junto con cualquier otra licencia médica a la que tenga derecho el empleado.\n\nEl otro tipo de licencia médica es la licencia militar no remunerada, que se concede a aquellos empleados que están ausentes por servicio en las Fuerzas Armadas de los EE. UU. según la Ley de Derechos de Empleo y Reempleo de los Miembros de las Fuerzas.\n\nPara obtener más información sobre las licencias médicas, le recomendaría consultar el manual de empleo o comunicarse con el departamento de recursos humanos de su empresa.",
+    "role": "assistant",
+    "timestamp": "14:29"
+  },
+  {
+    "role": "user",
+    "content": "cual es la politica de extranjeros?",
+    "timestamp": "14:31"
+  },
+  {
+    "role": "assistant",
+    "content": "Respuesta: La política de extranjeros en Chile se rige por varias leyes y regulaciones gubernamentales. El Ministerio del Trabajo es una de las entidades encargadas de supervisar y aplicar dichas políticas, especialmente en lo que respecta a la relación laboral entre empleadores y empleados extranjeros.\n\nSegún el Código de Trabajo (PDF), los empleadores en Chile deben seguir ciertas regulaciones cuando contratan a trabajadores extranjeros. Estas incluyen obtener las debidas visas y permisos de trabajo, así como garantizar que los derechos laborales de los trabajadores extranjeros sean respetados.\n\nPara más información sobre la política de extranjeros en Chile, le recomendaría consultar el Código de Trabajo y otras fuentes oficiales.",
+    "timestamp": "14:32"
+  }
+]
